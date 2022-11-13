@@ -1,5 +1,5 @@
-function App() {
-  return <button>Hello world</button>;
-}
+import Header from "./layout/header/Header";
 
-export default App;
+export default function App() {
+  return <Header />;
+}
