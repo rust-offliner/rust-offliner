@@ -1,0 +1,23 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  height: 100vh;
+  display: grid;
+  place-items: center;
+  background-color: hsl(0, 0%, 25%);
+}
+
+button {
+  padding-inline: 3em;
+  padding-block: 2em;
+  background-color: hsl(240, 43%, 48%);
+  color: white;
+  border-radius: 1em;
+  font-size: 1.6rem;
+  border: none;
+}
