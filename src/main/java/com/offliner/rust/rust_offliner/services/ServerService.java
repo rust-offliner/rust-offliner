@@ -17,13 +17,12 @@ public class ServerService {
         this.webClient = webClient;
     }
 
-    public String getServer() {
-        System.out.println("a");
+    public ServerTemplate getServer(int id) {
         return webClient
                 .get()
-                .uri("/servers/9565288?include=player&fields[player]=name,id,updatedAt&fields[server]=name,players,maxPlayers")
+                .uri("/servers/" + id + "?include=player&fields[player]=name,id,updatedAt&fields[server]=name,players,maxPlayers")
                 .retrieve()
-                .bodyToMono(String.class)
+                .bodyToMono(ServerTemplate.class)
                 .block();
     }
 
