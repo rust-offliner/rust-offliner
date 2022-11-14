@@ -3,7 +3,7 @@ import ServerInfo from '../../components/header/ServerInfo'
 
 export default function Header() {
   return (
-    <header>
+    <header className='primary-header'>
       <ServerInfo />
       <Search />
     </header>

@@ -6,9 +6,9 @@ export default function ServerInfo() {
   // todo get data from api
   return (
     <p>
-      <span>{serverName}</span>
+      <span>{serverName}</span>{' '}
       <span>
-        {onlinePlayers}/{maxOnlinePlayers}
+        {onlinePlayers} / {maxOnlinePlayers}
       </span>
     </p>
   )

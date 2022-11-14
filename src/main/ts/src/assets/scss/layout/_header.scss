@@ -1,3 +1,15 @@
 // -----------------------------------------------------------------------------
 // This file contains all styles related to the header of the site/application.
 // -----------------------------------------------------------------------------
+@use '../abstracts/' as *;
+@use 'sass:map';
+
+.primary-header {
+  display: grid;
+  place-items: center;
+  @media screen and (min-width: map.get($breakpoints,'medium')) {
+    grid-auto-flow: column;
+  }
+  padding: 0.5em;
+  background-color: $brand-color;
+}

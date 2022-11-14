@@ -1,5 +1,7 @@
 import { useState } from 'react'
 import handleSubmit from '../../services/searchService'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
 
 export default function Search() {
   const [searchValue, setSearchValue] = useState('')
@@ -13,10 +15,11 @@ export default function Search() {
         type={'text'}
         aria-label={'Search for a Rust server'}
         value={searchValue}
-        onChange={(event) => setSearchValue(event.target.value)}
+        onChange={(e) => setSearchValue(e.target.value)}
         placeholder={'Rust servers'}
       />
       <input type='submit' value='Search' />
+      <FontAwesomeIcon icon={faMagnifyingGlass} />
     </form>
   )
 }
