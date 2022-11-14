@@ -1,16 +1,19 @@
 import { useState } from 'react'
+import handleSubmit from '../../services/searchService'
 
 export default function Search() {
   const [searchValue, setSearchValue] = useState('')
-
-  // todo search for data from api
   return (
-    <form method='GET'>
+    <form
+      onSubmit={(event) => {
+        handleSubmit(event, searchValue, setSearchValue)
+      }}
+    >
       <input
         type={'text'}
         aria-label={'Search for a Rust server'}
         value={searchValue}
-        onChange={(e) => setSearchValue(e.target.value)}
+        onChange={(event) => setSearchValue(event.target.value)}
         placeholder={'Rust servers'}
       />
       <input type='submit' value='Search' />
