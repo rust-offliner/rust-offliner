@@ -1,5 +1,5 @@
-import Search from "../../components/header/Search";
-import ServerInfo from "../../components/header/ServerInfo";
+import Search from '../../components/header/Search'
+import ServerInfo from '../../components/header/ServerInfo'
 
 export default function Header() {
   return (
@@ -7,5 +7,5 @@ export default function Header() {
       <ServerInfo />
       <Search />
     </header>
-  );
+  )
 }

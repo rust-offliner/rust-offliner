@@ -1,9 +1,9 @@
 export default function ServerInfo() {
-  const serverName: string = "Lorem ipsum dolor sit amet.",
-    onlinePlayers: number = 200,
-    maxOnlinePlayers: number = 250;
+  const serverName = 'Lorem ipsum dolor sit amet.',
+    onlinePlayers = 200,
+    maxOnlinePlayers = 250
 
-    //todo get data from api
+  // todo get data from api
   return (
     <p>
       <span>{serverName}</span>
@@ -11,5 +11,5 @@ export default function ServerInfo() {
         {onlinePlayers}/{maxOnlinePlayers}
       </span>
     </p>
-  );
+  )
 }
