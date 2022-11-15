@@ -11,15 +11,19 @@ export default function Search() {
         handleSubmit(event, searchValue, setSearchValue)
       }}
     >
-      <input
-        type={'text'}
-        aria-label={'Search for a Rust server'}
-        value={searchValue}
-        onChange={(e) => setSearchValue(e.target.value)}
-        placeholder={'Rust servers'}
-      />
-      <input type='submit' value='Search' />
-      <FontAwesomeIcon icon={faMagnifyingGlass} />
+      <div className={'search-form-area'}>
+        <input
+          type={'text'}
+          className={'search-form-area__input'}
+          aria-label={'Search for a Rust server'}
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+          placeholder={'Rust servers'}
+        />
+        <button type='submit' className={'search-form-area__submit-button'}>
+          <FontAwesomeIcon icon={faMagnifyingGlass} />
+        </button>
+      </div>
     </form>
   )
 }

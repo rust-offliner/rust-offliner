@@ -1,0 +1,41 @@
+@use '../abstracts/' as *;
+
+.search-form-area {
+  display: grid;
+  grid-auto-flow: column;
+  padding-inline: 0.2em;
+  padding-block: 0.2em;
+  background-color: white;
+  border-radius: 10em;
+  filter: drop-shadow(0.2em 0.2em 0.2em);
+
+  &:focus-within {
+    outline: solid 3px;
+  }
+
+  &__input {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    padding-inline: 0.5em;
+  }
+
+  &__submit-button {
+    display: grid;
+    place-items: center;
+    background-color: transparent;
+    border: none;
+    color: $brand-color;
+    outline: none;
+    padding-block: 0;
+
+    & > svg {
+      padding: 0.25em;
+      border-radius: 100%;
+    }
+
+    &:focus-within > svg {
+      outline: solid;
+    }
+  }
+}

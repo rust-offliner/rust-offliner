@@ -10,6 +10,6 @@
   @media screen and (min-width: map.get($breakpoints,'medium')) {
     grid-auto-flow: column;
   }
-  padding: 0.5em;
+  padding-block: 0.5em;
   background-color: $brand-color;
 }
