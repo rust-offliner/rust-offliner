@@ -1,20 +1,51 @@
-package com.offliner.rust.rust_offliner.datamodel;
+package com.offliner.rust.rust_offliner.persistence.datamodel;
 
+import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
 
+@Entity
+@Table(name = "Players")
 public class Player {
 
-//    private final long STEAMID64;
-    private final long BMID;
+    @Id
+    @Column(name = "battlemetrics_id")
+    private long BMID;
 
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "last_seen")
     private LocalDateTime lastSeen;
+
+    @Transient
     private boolean isOnline = false;
+
+    @ManyToOne
+    @JoinColumn(name = "server_id")
+    private Server server;
+
+    @ManyToOne
+    @JoinColumn(name = "base_id")
     private Base base;
 
+
+    public Base getBase() {
+        return base;
+    }
+
+    public void setBase(Base base) {
+        this.base = base;
+    }
+
+    public Server getServer() {
+        return server;
+    }
+
+    public void setServer(Server server) {
+        this.server = server;
+    }
+
     public Player(long BMID, LocalDateTime lastSeen) {
-//        this.STEAMID64 = STEAMID64;
         this.BMID = BMID;
         this.lastSeen = lastSeen;
     }
@@ -25,6 +56,10 @@ public class Player {
         this.lastSeen = lastSeen;
     }
 
+    public Player() {
+
+    }
+
     public void setLastSeen(LocalDateTime lastSeen) {
         this.lastSeen = lastSeen;
     }
@@ -33,13 +68,6 @@ public class Player {
         isOnline = online;
     }
 
-    public void setBase(Base base) {
-        this.base = base;
-    }
-
-//    public long getSTEAMID64() {
-//        return STEAMID64;
-//    }
 
     public long getBMID() {
         return BMID;
@@ -53,7 +81,4 @@ public class Player {
         return isOnline;
     }
 
-    public Base getBase() {
-        return base;
-    }
 }

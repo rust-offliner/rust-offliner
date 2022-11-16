@@ -1,13 +1,41 @@
-package com.offliner.rust.rust_offliner.datamodel;
+package com.offliner.rust.rust_offliner.persistence.datamodel;
 
+import javax.persistence.*;
 import java.util.List;
 
+@Entity
+@Table(name = "Base")
 public class Base {
 
-    private final int coordX;
-    private final int coordY;
+    @Id
+    @Column(name = "base_id")
+    private long id;
+    private int coordX;
+    private int coordY;
+
+    @OneToMany(mappedBy = "base")
     private List<Player> playerList;
     private boolean isOnline;
+
+
+//    @OneToMany()
+//    private Player player;
+
+    @ManyToOne
+    @JoinColumn(name = "map_id")
+    private Map map;
+
+    public Map getMap() {
+        return map;
+    }
+
+    public void setMap(Map map) {
+        this.map = map;
+    }
+
+    public Base() {
+
+    }
 
     public int getCoordX() {
         return coordX;
@@ -33,7 +61,8 @@ public class Base {
         isOnline = online;
     }
 
-    public Base(int coordX, int coordY) {
+    public Base(long id, int coordX, int coordY) {
+        this.id = id;
         this.coordX = coordX;
         this.coordY = coordY;
     }
