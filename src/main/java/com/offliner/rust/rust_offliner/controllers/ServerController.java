@@ -1,7 +1,7 @@
 package com.offliner.rust.rust_offliner.controllers;
 
-import com.offliner.rust.rust_offliner.services.ServerService;
-import com.offliner.rust.rust_offliner.services.service_datamodel.ServerTemplate.ServerTemplate;
+import com.offliner.rust.rust_offliner.services.BattlemetricsServerService;
+import com.offliner.rust.rust_offliner.services.ServerTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,11 +10,14 @@ import org.springframework.web.bind.annotation.*;
 public class ServerController {
 
     @Autowired
-    ServerService serverService;
+    BattlemetricsServerService serverService;
 
     @GetMapping("/{id}")
     public ServerTemplate getServer(@PathVariable int id) {
         return serverService.getServer(id);
     }
+
+//    @PostMapping("query")
+//    public Server returnServer(@RequestBody String query) {  }
 
 }

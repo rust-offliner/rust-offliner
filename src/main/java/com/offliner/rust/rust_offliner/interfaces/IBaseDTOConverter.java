@@ -6,7 +6,7 @@ import java.util.stream.Collectors;
 
 //convert from database object @Entity to DTO
 //or the other way around
-public interface BaseDTOConverter<F, T> {
+public interface IBaseDTOConverter<F, T> {
 
     public T convert(F from);
 
