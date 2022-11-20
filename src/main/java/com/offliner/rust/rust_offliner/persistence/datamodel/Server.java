@@ -52,7 +52,7 @@ public class Server {
 
     }
 
-    public long getSERVERID() {
+    public long getServerId() {
         return serverId;
     }
 

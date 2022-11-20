@@ -1,4 +1,4 @@
-package com.offliner.rust.rust_offliner.services.service_datamodel.ServerTemplate;
+package com.offliner.rust.rust_offliner.services;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.offliner.rust.rust_offliner.persistence.datamodel.Player;

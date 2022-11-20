@@ -1,19 +1,18 @@
 package com.offliner.rust.rust_offliner.services;
 
-import com.offliner.rust.rust_offliner.services.service_datamodel.ServerTemplate.ServerTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
-public class ServerService {
+public class BattlemetricsServerService {
 
 //    private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(3);
 
     private final WebClient webClient;
 
     @Autowired
-    public ServerService(WebClient webClient) {
+    public BattlemetricsServerService(WebClient webClient) {
         this.webClient = webClient;
     }
 

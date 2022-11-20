@@ -28,6 +28,24 @@ public class Player {
     @JoinColumn(name = "base_id")
     private Base base;
 
+    @Column(name = "followed")
+    private boolean followed;
+
+    public boolean isFollowed() {
+        return followed;
+    }
+
+    public void setFollowed(boolean followed) {
+        this.followed = followed;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public Base getBase() {
         return base;
