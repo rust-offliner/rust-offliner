@@ -1,4 +1,4 @@
-package com.offliner.rust.rust_offliner;
+package com.offliner.rust.rust_offliner.security;
 
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;

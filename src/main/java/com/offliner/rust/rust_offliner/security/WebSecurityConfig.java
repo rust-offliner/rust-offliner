@@ -1,7 +1,5 @@
 package com.offliner.rust.rust_offliner.security;
 
-import com.offliner.rust.rust_offliner.JwtAuthenticationEntryPoint;
-import com.offliner.rust.rust_offliner.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

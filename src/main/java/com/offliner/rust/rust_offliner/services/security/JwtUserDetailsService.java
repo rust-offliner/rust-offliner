@@ -1,4 +1,4 @@
-package com.offliner.rust.rust_offliner.security;
+package com.offliner.rust.rust_offliner.services.security;
 
 import com.offliner.rust.rust_offliner.datamodel.UserDTO;
 import com.offliner.rust.rust_offliner.interfaces.IUserDao;

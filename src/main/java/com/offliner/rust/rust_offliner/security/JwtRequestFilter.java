@@ -1,7 +1,6 @@
-package com.offliner.rust.rust_offliner;
+package com.offliner.rust.rust_offliner.security;
 
-import com.offliner.rust.rust_offliner.security.JwtTokenUtil;
-import com.offliner.rust.rust_offliner.security.JwtUserDetailsService;
+import com.offliner.rust.rust_offliner.services.security.JwtUserDetailsService;
 import io.jsonwebtoken.ExpiredJwtException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
