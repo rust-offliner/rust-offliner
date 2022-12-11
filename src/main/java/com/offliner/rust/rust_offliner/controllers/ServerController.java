@@ -12,7 +12,7 @@ public class ServerController {
     @Autowired
     BattlemetricsServerService serverService;
 
-    @GetMapping("/{id}")
+    @PostMapping("/{id}")
     public ServerTemplate getServer(@PathVariable int id) {
         return serverService.getServer(id);
     }

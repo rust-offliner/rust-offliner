@@ -8,6 +8,7 @@ import java.util.List;
 public class Base {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "base_id")
     private long id;
     private int coordX;
