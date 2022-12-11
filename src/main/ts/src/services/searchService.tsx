@@ -1,4 +1,4 @@
-import { FormEvent, SetStateAction } from 'react'
+import { FormEvent, SetStateAction } from "react"
 
 const handleSubmit = async (
   event: FormEvent<HTMLFormElement>,
@@ -7,17 +7,17 @@ const handleSubmit = async (
 ) => {
   event.preventDefault()
   try {
-    const url = 'offline.bieda.it/api/query'
+    const url = "offline.bieda.it/api/query"
     const res = await fetch(url, {
-      method: 'POST',
+      method: "POST",
       body: JSON.stringify({
         query: queryValue,
       }),
     })
     if (res.status === 200) {
-      setQueryValue('')
+      setQueryValue("")
     } else {
-      console.log('error')
+      console.log("error")
     }
   } catch (err) {
     console.log(err)

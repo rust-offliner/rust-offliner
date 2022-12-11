@@ -1,0 +1,10 @@
+@use "../../assets/styles/abstracts/" as *;
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  border-bottom: solid $brand-color;
+  padding-inline: 1rem;
+  padding-block: 1rem;
+}

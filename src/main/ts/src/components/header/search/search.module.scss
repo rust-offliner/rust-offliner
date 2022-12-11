@@ -1,0 +1,43 @@
+@use "../../../assets/styles/abstracts/" as *;
+
+.searchFormArea {
+  --spacing: 0.3125rem;
+  display: flex;
+  padding-inline: var(--spacing);
+  padding-block: var(--spacing);
+  background-color: white;
+  border-radius: 10rem;
+  filter: drop-shadow(var(--spacing) var(--spacing) var(--spacing));
+
+  &:focus-within {
+    outline: solid $text-color;
+  }
+
+  > input {
+    background-color: transparent;
+    border: none;
+    outline: none;
+    padding-inline: 0.5rem;
+  }
+
+  > button {
+    display: grid;
+    place-items: center;
+    background-color: transparent;
+    border: none;
+    color: $brand-color;
+    outline: none;
+    padding-block: 0;
+
+    > svg {
+      padding: 0.25em;
+      border-radius: 100%;
+    }
+
+    @include on-event() {
+      > svg {
+        outline: solid;
+      }
+    }
+  }
+}

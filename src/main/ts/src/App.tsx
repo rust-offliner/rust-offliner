@@ -1,13 +1,10 @@
-import Header from './layout/header/Header'
-
+import Header from "./layout/header/Header"
+import Main from "./layout/main/Main"
 export default function App() {
   return (
     <>
       <Header />
-
-      {/* temp layout */}
-      <div className='search-result'>search result</div>
-      <div className='map'>map</div>
+      <Main />
     </>
   )
 }
