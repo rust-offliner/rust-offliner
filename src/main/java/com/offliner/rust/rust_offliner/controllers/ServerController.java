@@ -2,8 +2,15 @@ package com.offliner.rust.rust_offliner.controllers;
 
 import com.offliner.rust.rust_offliner.services.BattlemetricsServerService;
 import com.offliner.rust.rust_offliner.services.ServerTemplate;
+import io.github.bucket4j.Bandwidth;
+import io.github.bucket4j.Bucket;
+import io.github.bucket4j.Refill;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.Duration;
 
 @RestController
 @RequestMapping("/api")
@@ -12,9 +19,19 @@ public class ServerController {
     @Autowired
     BattlemetricsServerService serverService;
 
+    private final Bucket bucket;
+
+    public ServerController() {
+        Bandwidth limit = Bandwidth.classic(10, Refill.greedy(10, Duration.ofMinutes(1)));
+        this.bucket = Bucket.builder().addLimit(limit).build();
+    }
+
     @PostMapping("/{id}")
-    public ServerTemplate getServer(@PathVariable int id) {
-        return serverService.getServer(id);
+    public ResponseEntity<?> getServer(@PathVariable int id) {
+        if (bucket.tryConsume(1)) {
+            return ResponseEntity.ok(serverService.getServer(id));
+        }
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
     }
 
 //    @PostMapping("query")
