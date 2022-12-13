@@ -1,5 +1,6 @@
 package com.offliner.rust.rust_offliner.controllers;
 
+import com.offliner.rust.rust_offliner.datamodel.ServerDTO;
 import com.offliner.rust.rust_offliner.datamodel.TokenizedResponse;
 import com.offliner.rust.rust_offliner.security.TokenHandler;
 import com.offliner.rust.rust_offliner.services.BattlemetricsServerService;
@@ -35,7 +36,27 @@ public class ServerController {
     public ResponseEntity<TokenizedResponse<?>> getServer(@PathVariable int id, @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization) {
         if (bucket.tryConsume(1)) {
             String newToken = tokenHandler.handle(authorization);
-            return ResponseEntity.ok(new TokenizedResponse(newToken, bucket.getAvailableTokens(), serverService.getServer(id)));
+            ServerDTO server = serverService.getServer(id);
+            if (!server.isNull())
+                return ResponseEntity.ok(new TokenizedResponse(newToken, bucket.getAvailableTokens(), server));
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        }
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+    }
+
+    /* TODO
+        jesli serwer istnieje query do DB
+        INSERT INTO `server` VALUES(null, ipaddr, port, wipe_date)
+        query do rustmaps UNLESS custom map
+        INSERT INTO `maps` ...
+     */
+    @PostMapping("/follow/{id}")
+    public ResponseEntity<TokenizedResponse<?>> followServer(
+            @PathVariable int id, @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization) {
+        if (bucket.tryConsume(1)) {
+            String newToken = tokenHandler.handle(authorization);
+            return ResponseEntity.ok(new TokenizedResponse(newToken, bucket.getAvailableTokens(), null));
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
     }

@@ -88,4 +88,21 @@ public class ServerDTO {
     public void setPlayerList(List<Player> playerList) {
         this.playerList = playerList;
     }
+
+    public boolean isNull() {
+        return (id == 0 && name == null && currentPlayers == 0 && maxPlayers == 0 && playerList.isEmpty());
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ServerDTO serverDTO = (ServerDTO) o;
+        return id == serverDTO.id && currentPlayers == serverDTO.currentPlayers && maxPlayers == serverDTO.maxPlayers && name.equals(serverDTO.name) && playerList.equals(serverDTO.playerList);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, currentPlayers, maxPlayers, playerList);
+    }
 }
