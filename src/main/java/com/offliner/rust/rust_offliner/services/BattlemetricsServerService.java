@@ -1,5 +1,6 @@
 package com.offliner.rust.rust_offliner.services;
 
+import com.offliner.rust.rust_offliner.datamodel.ServerDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -16,12 +17,12 @@ public class BattlemetricsServerService {
         this.webClient = webClient;
     }
 
-    public ServerTemplate getServer(int id) {
+    public ServerDTO getServer(int id) {
         return webClient
                 .get()
                 .uri("/servers/" + id + "?include=player&fields[player]=name,id,updatedAt&fields[server]=name,players,maxPlayers")
                 .retrieve()
-                .bodyToMono(ServerTemplate.class)
+                .bodyToMono(ServerDTO.class)
                 .block();
     }
 

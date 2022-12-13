@@ -5,7 +5,7 @@ import java.io.File;
 import java.util.List;
 
 @Entity
-@Table(name = "Maps")
+@Table(name = "maps")
 public class Map {
 
     @Id

@@ -3,9 +3,10 @@ package com.offliner.rust.rust_offliner.persistence.datamodel;
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 @Entity
-@Table(name = "Server")
+@Table(name = "server")
 public class Server {
 
     @Id
@@ -24,6 +25,14 @@ public class Server {
 
     @Column(name = "port")
     private int port;
+
+    @ManyToMany
+    @JoinTable(
+            name = "servers_to_users",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "server_id")
+    )
+    private Set<User> users;
 
     @Transient
     private int playersCount;

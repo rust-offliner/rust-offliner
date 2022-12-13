@@ -3,9 +3,10 @@ package com.offliner.rust.rust_offliner.persistence.datamodel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.Set;
 
 @Entity
-@Table(name = "Users")
+@Table(name = "users")
 public class User {
 
     @Id
@@ -20,7 +21,8 @@ public class User {
     @JsonIgnore
     private String password;
 
-
+    @ManyToMany(mappedBy = "users")
+    private Set<Server> servers;
 
     public long getId() {
         return id;

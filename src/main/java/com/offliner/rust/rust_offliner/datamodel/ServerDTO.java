@@ -1,4 +1,4 @@
-package com.offliner.rust.rust_offliner.services;
+package com.offliner.rust.rust_offliner.datamodel;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.offliner.rust.rust_offliner.persistence.datamodel.Player;
@@ -6,7 +6,7 @@ import com.offliner.rust.rust_offliner.persistence.datamodel.Player;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public class ServerTemplate {
+public class ServerDTO {
 
     private long id;
     private String name;
@@ -15,9 +15,9 @@ public class ServerTemplate {
 
     private List<Player> playerList = new ArrayList<>();
 
-    public ServerTemplate() { }
+    public ServerDTO() { }
 
-    public ServerTemplate(long id, String name) {
+    public ServerDTO(long id, String name) {
         this.id = id;
         this.name = name;
     }
