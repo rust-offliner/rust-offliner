@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 @Service
 public class JwtUserDetailsService implements UserDetailsService {
@@ -31,10 +32,14 @@ public class JwtUserDetailsService implements UserDetailsService {
                 new ArrayList<>());
     }
 
-    public User save(UserDTO user) {
+    public Optional<User> save(UserDTO user) {
+
+        if (userDao.findByUsername(user.getUsername()) != null)
+            return Optional.empty();
+
         User newUser = new User();
         newUser.setUsername(user.getUsername());
         newUser.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userDao.save(newUser);
+        return Optional.of(userDao.save(newUser));
     }
 }

@@ -2,6 +2,7 @@ package com.offliner.rust.rust_offliner.controllers;
 
 
 import com.offliner.rust.rust_offliner.datamodel.UserDTO;
+import com.offliner.rust.rust_offliner.persistence.datamodel.User;
 import com.offliner.rust.rust_offliner.security.JwtTokenUtil;
 import com.offliner.rust.rust_offliner.services.security.JwtUserDetailsService;
 import com.offliner.rust.rust_offliner.security.model.JwtRequest;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.Duration;
+import java.util.Optional;
 
 @RestController
 @CrossOrigin
@@ -68,7 +70,13 @@ public class JwtAuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> saveUser(@RequestBody UserDTO user) {
-        return ResponseEntity.ok(userDetailsService.save(user));
+        Optional<User> newUser = userDetailsService.save(user);
+
+        // check if user with given name already exists
+        if (newUser.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        }
+        return ResponseEntity.ok(newUser.get());
     }
 
     private void authenticate(String username, String password) throws Exception {
