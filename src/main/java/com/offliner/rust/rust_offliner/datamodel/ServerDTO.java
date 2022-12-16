@@ -1,7 +1,7 @@
 package com.offliner.rust.rust_offliner.datamodel;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.offliner.rust.rust_offliner.persistence.datamodel.Player;
+import com.offliner.rust.rust_offliner.persistence.datamodel.PlayerEntity;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -13,7 +13,7 @@ public class ServerDTO {
     private int currentPlayers;
     private int maxPlayers;
 
-    private List<Player> playerList = new ArrayList<>();
+    private List<PlayerEntity> playerList = new ArrayList<>();
 
     public ServerDTO() { }
 
@@ -44,7 +44,7 @@ public class ServerDTO {
 
             String name = attributes.get("name");
 
-            playerList.add(new Player(id, name, date));
+            playerList.add(new PlayerEntity(id, name, date));
         }
     }
 
@@ -81,11 +81,11 @@ public class ServerDTO {
         this.maxPlayers = maxPlayers;
     }
 
-    public List<Player> getPlayerList() {
+    public List<PlayerEntity> getPlayerList() {
         return playerList;
     }
 
-    public void setPlayerList(List<Player> playerList) {
+    public void setPlayerList(List<PlayerEntity> playerList) {
         this.playerList = playerList;
     }
 

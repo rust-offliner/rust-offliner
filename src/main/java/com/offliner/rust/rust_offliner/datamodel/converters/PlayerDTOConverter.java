@@ -2,12 +2,12 @@ package com.offliner.rust.rust_offliner.datamodel.converters;
 
 import com.offliner.rust.rust_offliner.datamodel.PlayerDTO;
 import com.offliner.rust.rust_offliner.interfaces.IBaseDTOConverter;
-import com.offliner.rust.rust_offliner.persistence.datamodel.Player;
+import com.offliner.rust.rust_offliner.persistence.datamodel.PlayerEntity;
 
-public class PlayerDTOConverter implements IBaseDTOConverter<Player, PlayerDTO> {
+public class PlayerDTOConverter implements IBaseDTOConverter<PlayerEntity, PlayerDTO> {
 
     @Override
-    public PlayerDTO convert(Player from) {
+    public PlayerDTO convert(PlayerEntity from) {
 
         PlayerDTO player = new PlayerDTO();
 

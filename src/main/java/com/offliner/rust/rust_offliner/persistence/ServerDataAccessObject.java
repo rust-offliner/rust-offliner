@@ -1,6 +1,6 @@
 package com.offliner.rust.rust_offliner.persistence;
 
-import com.offliner.rust.rust_offliner.persistence.datamodel.Server;
+import com.offliner.rust.rust_offliner.persistence.datamodel.ServerEntity;
 import com.offliner.rust.rust_offliner.interfaces.IDataAccessObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.List;
 import java.util.Optional;
 
-public class ServerDataAccessObject implements IDataAccessObject<Server> {
+public class ServerDataAccessObject implements IDataAccessObject<ServerEntity> {
 
     @Autowired
     JdbcTemplate jdbcTemplate;
@@ -18,28 +18,28 @@ public class ServerDataAccessObject implements IDataAccessObject<Server> {
     // add server query addition implementation
 
     @Override
-    public boolean add(Server server) {
+    public boolean add(ServerEntity server) {
         jdbcTemplate.update("INSERT INTO `Server` VALUES (?, ?, ?, ?)", server.getServerId(), server.getIPAddress(), server.getPort(), server.getWipeDate());
         return false;
     }
 
     @Override
-    public Server update(Server server) {
+    public ServerEntity update(ServerEntity server) {
         return null;
     }
 
     @Override
-    public boolean delete(Server server) {
+    public boolean delete(ServerEntity server) {
         return false;
     }
 
     @Override
-    public Optional<Server> get(long id) {
+    public Optional<ServerEntity> get(long id) {
         return Optional.empty();
     }
 
     @Override
-    public List<Server> getAll() {
+    public List<ServerEntity> getAll() {
         return null;
     }
 }

@@ -7,7 +7,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "server")
-public class Server {
+public class ServerEntity {
 
     @Id
     @Column(name = "server_id")
@@ -18,7 +18,7 @@ public class Server {
 
     @OneToOne
     @JoinColumn(name = "server_id", referencedColumnName = "server_id")
-    private Map map;
+    private MapEntity map;
 
     @Column(name = "ip_address")
     private String addressIp;
@@ -32,15 +32,15 @@ public class Server {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "server_id")
     )
-    private Set<User> users;
+    private Set<UserEntity> users;
 
     @Transient
     private int playersCount;
 
     @OneToMany(mappedBy = "server")
-    private List<Player> followedPlayersList;
+    private List<PlayerEntity> followedPlayersList;
 
-    public Server(long serverId, Date wipeDate, Map map, String addressIp, int port, List<Player> playersList) {
+    public ServerEntity(long serverId, Date wipeDate, MapEntity map, String addressIp, int port, List<PlayerEntity> playersList) {
         this.serverId = serverId;
         this.wipeDate = wipeDate;
         this.map = map;
@@ -51,13 +51,13 @@ public class Server {
         this.playersCount = this.followedPlayersList.size();
     }
 
-    public Server(long serverId, String addressIp, int port) {
+    public ServerEntity(long serverId, String addressIp, int port) {
         this.serverId = serverId;
         this.addressIp = addressIp;
         this.port = port;
     }
 
-    public Server() {
+    public ServerEntity() {
 
     }
 
@@ -73,11 +73,11 @@ public class Server {
         this.wipeDate = wipeDate;
     }
 
-    public Map getMap() {
+    public MapEntity getMap() {
         return map;
     }
 
-    public void setMap(Map map) {
+    public void setMap(MapEntity map) {
         this.map = map;
     }
 
@@ -97,11 +97,11 @@ public class Server {
         this.playersCount = playersCount;
     }
 
-    public List<Player> getFollowedPlayersList() {
+    public List<PlayerEntity> getFollowedPlayersList() {
         return followedPlayersList;
     }
 
-    public void setFollowedPlayersList(List<Player> followedPlayersList) {
+    public void setFollowedPlayersList(List<PlayerEntity> followedPlayersList) {
         this.followedPlayersList = followedPlayersList;
     }
 }

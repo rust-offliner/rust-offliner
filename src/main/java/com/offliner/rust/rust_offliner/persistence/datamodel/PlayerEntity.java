@@ -5,7 +5,7 @@ import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "players")
-public class Player {
+public class PlayerEntity {
 
     @Id
     @Column(name = "battlemetrics_id")
@@ -22,11 +22,11 @@ public class Player {
 
     @ManyToOne
     @JoinColumn(name = "server_id")
-    private Server server;
+    private ServerEntity server;
 
     @ManyToOne
     @JoinColumn(name = "base_id")
-    private Base base;
+    private BaseEntity base;
 
     @Column(name = "followed")
     private boolean followed;
@@ -47,34 +47,34 @@ public class Player {
         this.name = name;
     }
 
-    public Base getBase() {
+    public BaseEntity getBase() {
         return base;
     }
 
-    public void setBase(Base base) {
+    public void setBase(BaseEntity base) {
         this.base = base;
     }
 
-    public Server getServer() {
+    public ServerEntity getServer() {
         return server;
     }
 
-    public void setServer(Server server) {
+    public void setServer(ServerEntity server) {
         this.server = server;
     }
 
-    public Player(long BMID, LocalDateTime lastSeen) {
+    public PlayerEntity(long BMID, LocalDateTime lastSeen) {
         this.BMID = BMID;
         this.lastSeen = lastSeen;
     }
 
-    public Player(long BMID, String name, LocalDateTime lastSeen) {
+    public PlayerEntity(long BMID, String name, LocalDateTime lastSeen) {
         this.BMID = BMID;
         this.name = name;
         this.lastSeen = lastSeen;
     }
 
-    public Player() {
+    public PlayerEntity() {
 
     }
 

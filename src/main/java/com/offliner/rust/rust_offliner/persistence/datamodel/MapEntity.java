@@ -6,7 +6,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "maps")
-public class Map {
+public class MapEntity {
 
     @Id
     @Column(name = "map_id")
@@ -21,27 +21,27 @@ public class Map {
 
     @OneToOne
     @JoinColumn(name = "server_id", referencedColumnName = "server_id")
-    private Server server;
+    private ServerEntity server;
 
     @OneToMany(mappedBy = "map")
-    private List<Base> baseList;
+    private List<BaseEntity> baseList;
 
-    public Server getServer() {
+    public ServerEntity getServer() {
         return server;
     }
 
-    public void setServer(Server server) {
+    public void setServer(ServerEntity server) {
         this.server = server;
     }
 
-    public Map(long id, int size, String imagePath, List<Base> baseList) {
+    public MapEntity(long id, int size, String imagePath, List<BaseEntity> baseList) {
         this.id = id;
         this.size = size;
         this.imagePath = imagePath;
         this.baseList = baseList;
     }
 
-    public Map() {
+    public MapEntity() {
 
     }
 
