@@ -7,4 +7,6 @@ public interface IServerDao extends CrudRepository<ServerEntity, Integer> {
 
     ServerEntity findByServerId(int id);
 
+    boolean existsByServerId(int id);
+
 }

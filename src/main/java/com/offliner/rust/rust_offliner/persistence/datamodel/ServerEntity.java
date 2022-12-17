@@ -1,6 +1,7 @@
 package com.offliner.rust.rust_offliner.persistence.datamodel;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -14,7 +15,7 @@ public class ServerEntity {
     private long serverId;
 
     @Column(name = "wipe_date")
-    private Date wipeDate;
+    private LocalDateTime wipeDate;
 
     @OneToOne
     @JoinColumn(name = "server_id", referencedColumnName = "server_id")
@@ -40,7 +41,7 @@ public class ServerEntity {
     @OneToMany(mappedBy = "server")
     private List<PlayerEntity> followedPlayersList;
 
-    public ServerEntity(long serverId, Date wipeDate, MapEntity map, String addressIp, int port, List<PlayerEntity> playersList) {
+    public ServerEntity(long serverId, LocalDateTime wipeDate, MapEntity map, String addressIp, int port, List<PlayerEntity> playersList) {
         this.serverId = serverId;
         this.wipeDate = wipeDate;
         this.map = map;
@@ -65,11 +66,11 @@ public class ServerEntity {
         return serverId;
     }
 
-    public Date getWipeDate() {
+    public LocalDateTime getWipeDate() {
         return wipeDate;
     }
 
-    public void setWipeDate(Date wipeDate) {
+    public void setWipeDate(LocalDateTime wipeDate) {
         this.wipeDate = wipeDate;
     }
 
