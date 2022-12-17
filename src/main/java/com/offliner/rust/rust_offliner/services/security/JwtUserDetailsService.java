@@ -2,7 +2,7 @@ package com.offliner.rust.rust_offliner.services.security;
 
 import com.offliner.rust.rust_offliner.datamodel.UserDTO;
 import com.offliner.rust.rust_offliner.interfaces.IUserDao;
-import com.offliner.rust.rust_offliner.persistence.datamodel.User;
+import com.offliner.rust.rust_offliner.persistence.datamodel.UserEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,7 +24,7 @@ public class JwtUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userDao.findByUsername(username);
+        UserEntity user = userDao.findByUsername(username);
         if (user == null) {
             throw new UsernameNotFoundException("User not found with username: " + username);
         }
@@ -32,12 +32,12 @@ public class JwtUserDetailsService implements UserDetailsService {
                 new ArrayList<>());
     }
 
-    public Optional<User> save(UserDTO user) {
+    public Optional<UserEntity> save(UserDTO user) {
 
         if (userDao.findByUsername(user.getUsername()) != null)
             return Optional.empty();
 
-        User newUser = new User();
+        UserEntity newUser = new UserEntity();
         newUser.setUsername(user.getUsername());
         newUser.setPassword(passwordEncoder.encode(user.getPassword()));
         return Optional.of(userDao.save(newUser));

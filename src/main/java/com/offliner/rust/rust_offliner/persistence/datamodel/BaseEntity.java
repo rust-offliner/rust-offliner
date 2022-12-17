@@ -5,7 +5,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "base")
-public class Base {
+public class BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,7 +15,7 @@ public class Base {
     private int coordY;
 
     @OneToMany(mappedBy = "base")
-    private List<Player> playerList;
+    private List<PlayerEntity> playerList;
     private boolean isOnline;
 
 
@@ -24,17 +24,17 @@ public class Base {
 
     @ManyToOne
     @JoinColumn(name = "map_id")
-    private Map map;
+    private MapEntity map;
 
-    public Map getMap() {
+    public MapEntity getMap() {
         return map;
     }
 
-    public void setMap(Map map) {
+    public void setMap(MapEntity map) {
         this.map = map;
     }
 
-    public Base() {
+    public BaseEntity() {
 
     }
 
@@ -46,11 +46,11 @@ public class Base {
         return coordY;
     }
 
-    public List<Player> getPlayerList() {
+    public List<PlayerEntity> getPlayerList() {
         return playerList;
     }
 
-    public void setPlayerList(List<Player> playerList) {
+    public void setPlayerList(List<PlayerEntity> playerList) {
         this.playerList = playerList;
     }
 
@@ -62,7 +62,7 @@ public class Base {
         isOnline = online;
     }
 
-    public Base(long id, int coordX, int coordY) {
+    public BaseEntity(long id, int coordX, int coordY) {
         this.id = id;
         this.coordX = coordX;
         this.coordY = coordY;

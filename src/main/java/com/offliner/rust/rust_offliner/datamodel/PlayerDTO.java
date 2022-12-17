@@ -1,6 +1,6 @@
 package com.offliner.rust.rust_offliner.datamodel;
 
-import com.offliner.rust.rust_offliner.persistence.datamodel.Base;
+import com.offliner.rust.rust_offliner.persistence.datamodel.BaseEntity;
 
 import java.time.LocalDateTime;
 
@@ -8,7 +8,7 @@ public class PlayerDTO {
 
     private String name;
     private LocalDateTime lastSeen;
-    private Base base;
+    private BaseEntity base;
     private boolean followed;
 
     public boolean isFollowed() {
@@ -35,11 +35,11 @@ public class PlayerDTO {
         this.lastSeen = lastSeen;
     }
 
-    public Base getBase() {
+    public BaseEntity getBase() {
         return base;
     }
 
-    public void setBase(Base base) {
+    public void setBase(BaseEntity base) {
         this.base = base;
     }
 }

@@ -7,7 +7,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class UserEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,7 @@ public class User {
     private String password;
 
     @ManyToMany(mappedBy = "users")
-    private Set<Server> servers;
+    private Set<ServerEntity> servers;
 
     public long getId() {
         return id;

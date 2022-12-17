@@ -2,7 +2,7 @@ package com.offliner.rust.rust_offliner.controllers;
 
 
 import com.offliner.rust.rust_offliner.datamodel.UserDTO;
-import com.offliner.rust.rust_offliner.persistence.datamodel.User;
+import com.offliner.rust.rust_offliner.persistence.datamodel.UserEntity;
 import com.offliner.rust.rust_offliner.security.JwtTokenUtil;
 import com.offliner.rust.rust_offliner.services.security.JwtUserDetailsService;
 import com.offliner.rust.rust_offliner.security.model.JwtRequest;
@@ -70,7 +70,7 @@ public class JwtAuthController {
 
     @PostMapping("/register")
     public ResponseEntity<?> saveUser(@RequestBody UserDTO user) {
-        Optional<User> newUser = userDetailsService.save(user);
+        Optional<UserEntity> newUser = userDetailsService.save(user);
 
         // check if user with given name already exists
         if (newUser.isEmpty()) {
