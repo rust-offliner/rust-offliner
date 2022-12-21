@@ -2,6 +2,7 @@ package com.offliner.rust.rust_offliner.services;
 
 import com.offliner.rust.rust_offliner.datamodel.BattlemetricsServerDTO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -15,7 +16,7 @@ public class BattlemetricsServerService {
     private final WebClient webClient;
 
     @Autowired
-    public BattlemetricsServerService(WebClient webClient) {
+    public BattlemetricsServerService(@Qualifier("Battlemetrics") WebClient webClient) {
         this.webClient = webClient;
     }
 

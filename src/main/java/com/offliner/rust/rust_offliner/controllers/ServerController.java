@@ -1,10 +1,12 @@
 package com.offliner.rust.rust_offliner.controllers;
 
 import com.offliner.rust.rust_offliner.datamodel.BattlemetricsServerDTO;
+import com.offliner.rust.rust_offliner.datamodel.RustMapsDTO;
 import com.offliner.rust.rust_offliner.datamodel.TokenizedResponse;
 import com.offliner.rust.rust_offliner.interfaces.IServerValidator;
 import com.offliner.rust.rust_offliner.security.TokenHandler;
 import com.offliner.rust.rust_offliner.services.BattlemetricsServerService;
+import com.offliner.rust.rust_offliner.services.RustMapsService;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
@@ -13,6 +15,8 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
+import reactor.core.publisher.Mono;
 
 import java.time.Duration;
 
@@ -22,6 +26,9 @@ public class ServerController {
 
     @Autowired
     BattlemetricsServerService serverService;
+
+    @Autowired
+    RustMapsService rustMapsService;
 
     @Autowired
     TokenHandler tokenHandler;
@@ -55,17 +62,24 @@ public class ServerController {
         INSERT INTO `maps` ...
      */
     @PostMapping("/follow/{id}")
-    public ResponseEntity<TokenizedResponse<?>> followServer(
-            @PathVariable int id, @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization) {
+    //    public Mono<ResponseEntity<TokenizedResponse<?>>> followServer(
+        public Mono<?> followServer(
+            @PathVariable int id, @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization) throws Exception {
+//        SseEmitter emitter = new SseEmitter(0L);
         if (bucket.tryConsume(1)) {
             String newToken = tokenHandler.handle(authorization);
-            return ResponseEntity.ok(new TokenizedResponse(newToken, bucket.getAvailableTokens(), null));
+//            try {
+//                System.out.println(rustMapsService.getMap(74902653, 4500).flatMap(System.out::print));
+//            } catch (Exception e) {
+//                System.out.println("exception");
+//            }
+//            rustMapsService.getMap(id, 4250);
+            return rustMapsService.getMap(id, 4250);
 //            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         }
-        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+        return Mono.just(ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build());
     }
+}
 
 //    @PostMapping("query")
 //    public Server returnServer(@RequestBody String query) {  }
-
-}
