@@ -1,10 +1,8 @@
-@use "../../assets/styles/abstracts/" as *;
+@use '../../assets/styles/abstracts/' as *;
 
 .header {
-  display: flex;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  border-bottom: solid $brand-color;
-  padding-inline: 1rem;
-  padding-block: 1rem;
+  position: absolute;
+  inset: 0 0 auto 0;
+  z-index: 1;
+  background-color: fade-out($color-primary, 0.25);
 }

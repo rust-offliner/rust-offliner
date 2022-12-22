@@ -1,0 +1,7 @@
+@use '../../assets/styles/abstracts/' as *;
+
+.a {
+  height: 100%;
+  background-color: $color-ocean-blue;
+  z-index: 0;
+}
