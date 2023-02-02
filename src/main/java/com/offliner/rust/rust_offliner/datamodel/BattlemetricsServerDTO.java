@@ -78,23 +78,24 @@ public class BattlemetricsServerDTO {
 
 
         // todo refactor ??
-        String mapName = (String) details.get("map");
-        if (!mapName.equals("Procedural Map")) {
-            if (ServersWithCustomMapsSupported.stream()
-                    .anyMatch(server -> mapName.toLowerCase()
-                    .contains(server.getNameServer().toLowerCase()))
-            ) {
-                //       throw new MapNotProceduralException();
-            } else {
-                // map is not retrievable, hence user has to upload the map on his own
-                this.setMap(null);
+        try {
+            String mapName = (String) details.get("map");
+            if (!mapName.equals("Procedural Map")) {
+                if (ServersWithCustomMapsSupported.stream()
+                        .anyMatch(server ->
+                        mapName.toLowerCase()
+                        .contains(server.getNameServer().toLowerCase()))
+                ) {
+                   throw new MapNotProceduralException();
+                }
+                throw new CustomMapNotSupportedException("Map is custom");
             }
+        } catch (CustomMapNotSupportedException e) {
+            this.setMap(null);
+        } catch (MapNotProceduralException e) {
             /*
             jakas logika której jeszcz enie zrobilem misiaczku
              */
-        } else {
-//            this.setMap();
-            System.out.println();
         }
 
         /**
