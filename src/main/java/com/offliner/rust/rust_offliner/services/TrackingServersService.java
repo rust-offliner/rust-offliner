@@ -24,6 +24,7 @@ public class TrackingServersService {
     @Value("${battlemetrics.tracked.max}")
     private int maxTrackedServers;
 
+    @Autowired
     private AtomicLong index;
 
     @PostConstruct
@@ -39,6 +40,7 @@ public class TrackingServersService {
         for (int i = (int) pagingIndex; i < pagingIndex + 10; ++i) {
             service.getServer(tracked.get(i));
         }
+        index.addAndGet(10);
 //            log.info(i.toString());
     }
 
@@ -46,7 +48,7 @@ public class TrackingServersService {
         long count = serverDao.countAllByCurrentlyTrackedIsTrue(); // all tracked servers count
         log.info(count + " tracked servers");
 //        int delay = (int)(currentlyTrackedServersCount / maxTrackedServers) * 60000 + 60000; // every minute for <60 tracked servers, 2 minutes for <120 servers etc
-//        if (count < 10) return 60000; // 60 seconds
+        if (count < 10) return 60000; // 60 seconds
 //        if (count < 20) return 30000;
         return (int) Math.ceil(600000.0 / count);
 //        int delay = 3000;
