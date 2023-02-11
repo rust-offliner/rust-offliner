@@ -27,6 +27,9 @@ public class ServerEntity {
     @Column(name = "port")
     private int port;
 
+    @Column(name = "tracked")
+    private boolean currentlyTracked;
+
     @ManyToMany
     @JoinTable(
             name = "servers_to_users",
