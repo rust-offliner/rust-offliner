@@ -24,6 +24,7 @@ public class TrackingServersService {
     @Value("${battlemetrics.tracked.max}")
     private int maxTrackedServers;
 
+    @Autowired
     private AtomicLong index;
 
     @PostConstruct
