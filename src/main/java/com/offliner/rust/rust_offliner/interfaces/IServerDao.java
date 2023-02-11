@@ -15,5 +15,5 @@ public interface IServerDao extends CrudRepository<ServerEntity, Integer> {
     long countAllByCurrentlyTrackedIsTrue();
 
     @Query(nativeQuery = true, value = "SELECT server_id FROM `server` WHERE tracked = 1")
-    List<Long> getAllByServerIdAndCurrentlyTrackedIsTrue();
+    List<Integer> getAllByServerIdAndCurrentlyTrackedIsTrue();
 }
