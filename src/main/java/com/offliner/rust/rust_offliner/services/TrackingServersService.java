@@ -1,6 +1,9 @@
 package com.offliner.rust.rust_offliner.services;
 
+import com.offliner.rust.rust_offliner.datamodel.BattlemetricsServerDTO;
 import com.offliner.rust.rust_offliner.interfaces.IServerDao;
+import com.offliner.rust.rust_offliner.persistence.ServerDataStateManager;
+import com.offliner.rust.rust_offliner.persistence.datamodel.ServerEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +24,9 @@ public class TrackingServersService {
     @Autowired
     BattlemetricsServerService service;
 
+    @Autowired
+    ServerDataStateManager manager;
+
     @Value("${battlemetrics.tracked.max}")
     private int maxTrackedServers;
 
@@ -38,7 +44,7 @@ public class TrackingServersService {
         int count = tracked.size();
         long pagingIndex = index.get(); // prevent mutating this field and breaking loop while updating state in other class
         for (int i = (int) pagingIndex; i < pagingIndex + 10; ++i) {
-            service.getServer(tracked.get(i));
+            BattlemetricsServerDTO server = service.getServer(tracked.get(i));
         }
         index.addAndGet(10);
 //            log.info(i.toString());
