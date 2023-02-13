@@ -1,6 +1,7 @@
 package com.offliner.rust.rust_offliner.services;
 
 import com.offliner.rust.rust_offliner.datamodel.BattlemetricsServerDTO;
+import com.offliner.rust.rust_offliner.exceptions.ServerNotTrackedException;
 import com.offliner.rust.rust_offliner.interfaces.IServerDao;
 import com.offliner.rust.rust_offliner.persistence.ServerDataStateManager;
 import com.offliner.rust.rust_offliner.persistence.datamodel.ServerEntity;
@@ -40,11 +41,18 @@ public class TrackingServersService {
 
     // TODO insert tracked data into DB
     public void track() {
-        List<Integer> tracked = serverDao.getAllByServerIdAndCurrentlyTrackedIsTrue();
+        List<Integer> tracked = serverDao.getAllCurrentlyTrackedServerIds();
         int count = tracked.size();
+        if (count == 0)
+            return;
         long pagingIndex = index.get(); // prevent mutating this field and breaking loop while updating state in other class
         for (int i = (int) pagingIndex; i < pagingIndex + 10; ++i) {
             BattlemetricsServerDTO server = service.getServer(tracked.get(i));
+            try {
+                manager.replace(tracked.get(i), server);
+            } catch (ServerNotTrackedException e) {
+                throw new RuntimeException(e);
+            }
         }
         index.addAndGet(10);
 //            log.info(i.toString());
