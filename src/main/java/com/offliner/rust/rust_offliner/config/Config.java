@@ -1,5 +1,6 @@
 package com.offliner.rust.rust_offliner.config;
 
+import com.offliner.rust.rust_offliner.state.TrackingState;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -32,5 +33,8 @@ public class Config {
 
     @Bean
     public AtomicLong paginationIndex() { return new AtomicLong(); }
+
+    @Bean
+    public TrackingState state() { return TrackingState.getInstance(); }
 
 }
