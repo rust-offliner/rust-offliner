@@ -31,10 +31,10 @@ public class Config {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public AtomicLong paginationIndex() { return new AtomicLong(); }
+//    @Bean
+//    public AtomicLong paginationIndex() { return new AtomicLong(); }
 
-    @Bean
-    public TrackingState state() { return TrackingState.getInstance(); }
+//    @Bean
+//    public TrackingState state() { return TrackingState.getInstance(); }
 
 }

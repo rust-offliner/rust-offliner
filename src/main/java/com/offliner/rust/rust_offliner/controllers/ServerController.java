@@ -45,12 +45,13 @@ public class ServerController {
         if (bucket.tryConsume(1)) {
             String newToken = tokenHandler.handle(authorization);
 //            BattlemetricsServerDTO server = serverService.getServer(id);
-            try {
-                BattlemetricsServerDTO server = manager.get(id);
+//            try {
+                //TODO change null and catch block
+                BattlemetricsServerDTO server = null;
                 return ResponseEntity.ok(new TokenizedResponse(newToken, bucket.getAvailableTokens(), server));
-            } catch (ServerNotTrackedException e) {
-                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build(); // server is not followed yet
-            }
+//            } catch (ServerNotTrackedException e) {
+//                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build(); // server is not followed yet
+//            }
             // TODO serwer jest nullem z jakiegos powodu
 //            if (!server.isNull())
 //                return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
