@@ -28,7 +28,7 @@ public class ServerEntity {
     private int port;
 
     @Column(name = "tracked")
-    private boolean currentlyTracked;
+    private boolean tracked;
 
     @ManyToMany
     @JoinTable(
@@ -79,6 +79,14 @@ public class ServerEntity {
 
     public MapEntity getMap() {
         return map;
+    }
+
+    public void setAddressIp(String addressIp) {
+        this.addressIp = addressIp;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
     }
 
     public void setMap(MapEntity map) {

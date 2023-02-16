@@ -17,6 +17,8 @@ public class ServerDTOConverter implements IBaseDTOConverter<BattlemetricsServer
         serverEntity.setWipeDate(from.getLastWiped());
         serverEntity.setMap(from.getMap());
         serverEntity.setPlayersCount(from.getCurrentPlayers());
+        serverEntity.setPort(from.getPort());
+        serverEntity.setAddressIp(from.getIpAddress());
 
         return serverEntity;
     }
