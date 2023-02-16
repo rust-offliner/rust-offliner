@@ -18,6 +18,10 @@ public class BattlemetricsServerDTO {
     private int currentPlayers;
     private int maxPlayers;
 
+    private String ipAddress;
+
+    private int port;
+
     private List<PlayerEntity> playerList = new ArrayList<>();
 
     private LocalDateTime lastWiped;
@@ -73,7 +77,7 @@ public class BattlemetricsServerDTO {
         this.setCurrentPlayers((Integer) attributes.get("players"));
         this.setMaxPlayers((Integer) attributes.get("maxPlayers"));
 
-        Map<String, Object> details = (Map<String, Object>) data.get("details");
+        Map<String, Object> details = (Map<String, Object>) attributes.get("details");
         String lastWipedString = (String) details.get("rust_last_wipe");
 
 
@@ -183,6 +187,23 @@ public class BattlemetricsServerDTO {
         return (id == 0 && name == null && currentPlayers == 0 && maxPlayers == 0 && playerList.isEmpty());
     }
 
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
+    }
+
+    public int getPort() {
+        return port;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
+    }
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -194,5 +215,18 @@ public class BattlemetricsServerDTO {
     @Override
     public int hashCode() {
         return Objects.hash(id, name, currentPlayers, maxPlayers, playerList);
+    }
+
+    @Override
+    public String toString() {
+        return "BattlemetricsServerDTO{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", currentPlayers=" + currentPlayers +
+                ", maxPlayers=" + maxPlayers +
+                ", playerList=" + playerList +
+                ", lastWiped=" + lastWiped +
+                ", map=" + map +
+                '}';
     }
 }
