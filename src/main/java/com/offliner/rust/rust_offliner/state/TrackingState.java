@@ -6,11 +6,14 @@ import com.offliner.rust.rust_offliner.exceptions.ServerNotTrackedException;
 import com.offliner.rust.rust_offliner.services.TrackingServersService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import javax.swing.plaf.nimbus.State;
 import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
 
 @Component
 public class TrackingState {
@@ -22,7 +25,18 @@ public class TrackingState {
     private Map<Long, BattlemetricsServerDTO> state = Collections.synchronizedMap(new HashMap<>());
 
     // we need an additional map to keep track of how many users follow each server (and also order for tracking)
-    private Map<Long, Integer> eachServerSubscribersCount = Collections.synchronizedMap(new LinkedHashMap<>());
+//    private Map<Long, Integer> eachServerSubscribersCount = Collections.synchronizedMap(new LinkedHashMap<>());
+    // list of ids
+//    private List<Long> order = Collections.synchronizedList(new ArrayList<>());
+    // count how many subscribers per each server (id) (in the same order as list above)
+//    private List<Integer> count = Collections.synchronizedList(new ArrayList<>());
+
+    @Autowired
+    @Qualifier("lock")
+    Object lock;
+
+    @Autowired
+    StateCountAndOrderWrapper countAndOrder;
 
 //    private AtomicLong index;
 
@@ -49,55 +63,106 @@ public class TrackingState {
         log.info("State instantiated");
     }
 
-    public void add(long id, BattlemetricsServerDTO server) throws KeyAlreadyExistsException {
-        if (state.containsKey(id)) {
-            int currentSubscribers = eachServerSubscribersCount.get(id);
-            eachServerSubscribersCount.replace(id, currentSubscribers + 1);
-            throw new KeyAlreadyExistsException("The key you are trying to put already exists");
+    public List<Long> getOrder() {
+        return countAndOrder.getOrder();
+    }
+
+    public void add(long id) throws KeyAlreadyExistsException {
+        synchronized (lock) {
+            if (state.containsKey(id)) {
+                throw new KeyAlreadyExistsException("The key you are trying to put already exists");
+            }
+            // we don't have state of this server yet
+            state.put(id, null);
+
+            countAndOrder.add(id);
         }
-        state.put(id, server);
+    }
+
+    public void add(long id, BattlemetricsServerDTO server) throws KeyAlreadyExistsException {
+        synchronized (lock) {
+                if (state.containsKey(id)) {
+                    countAndOrder.increment(id);
+//                    int index = order.indexOf(id);
+//                    int currentSubscribers = count.get(index);
+//                    eachServerSubscribersCount.replace(id, currentSubscribers + 1);
+//                    count.set(index, currentSubscribers + 1);
+                    throw new KeyAlreadyExistsException("The key you are trying to put already exists");
+                }
+                state.put(id, server);
 //        order.add(id);
-        eachServerSubscribersCount.put(id, 1);
+//            order.add(id);
+//            count.add(1);
+            countAndOrder.add(id);
+//                eachServerSubscribersCount.put(id, 1);
 //        mapSize++;
+
+        }
+
     }
 
     public BattlemetricsServerDTO get(long id) throws ServerNotTrackedException {
-        if (!state.containsKey(id)) {
-            throw new ServerNotTrackedException("Server " + id + " is not tracked");
+        synchronized (lock) {
+            if (!state.containsKey(id)) {
+                throw new ServerNotTrackedException("Server " + id + " is not tracked");
+            }
+            return state.get(id);
         }
-        return state.get(id);
     }
 
     public void replace(long id, BattlemetricsServerDTO server) throws ServerNotTrackedException {
-        if (!state.containsKey(id)) {
-            throw new ServerNotTrackedException("Server " + id + " is not tracked");
+        synchronized (lock) {
+            if (!state.containsKey(id)) {
+                throw new ServerNotTrackedException("Server " + id + " is not tracked");
+            }
+            state.replace(id, server);
         }
-        state.replace(id, server);
     }
 
     /**
      *
      * @param id
+     * identifier
+     *
+     * @return
+     * true on last item (need to update DB)
+     * false otherwise
      *
      * @throws ServerNotTrackedException
      * server is not tracked meaning we can't remove it
      *
-     * counter is decremented because when we remove one server, we automatically shrink our tracked list inside
      * @see TrackingServersService#track()
+     * counter is decremented because when we remove one server, we automatically shrink our tracked list inside
      */
-    public void remove(long id) throws ServerNotTrackedException {
-        if (!state.containsKey(id)) {
-            throw new ServerNotTrackedException("Server " + id + " is not tracked");
-        }
+    public boolean remove(long id) throws ServerNotTrackedException {
+        synchronized (lock) {
+                if (!state.containsKey(id)) {
+                    throw new ServerNotTrackedException("Server " + id + " is not tracked");
+                }
 //        index.decrementAndGet();
-        if (eachServerSubscribersCount.get(id) == 1) {
+//                if (eachServerSubscribersCount.get(id) == 1) {
 //            mapSize--;
-            state.remove(id);
-            eachServerSubscribersCount.remove(id);
-            return;
-        }
-        int currentSubscribers = eachServerSubscribersCount.get(id);
-        eachServerSubscribersCount.replace(id, currentSubscribers - 1);
+            if (countAndOrder.decrement(id)) {
+                state.remove(id);
+                return true;
+            }
+            return false;
+//            int index = order.indexOf(id);
+//            if (count.get(index) == 1) {
+//                state.remove(id);
+////                    eachServerSubscribersCount.remove(id);
+//                count.remove(index);
+//                order.remove(id);
+//                return true;
+//            }
+////                int currentSubscribers = eachServerSubscribersCount.get(id);
+////                eachServerSubscribersCount.replace(id, currentSubscribers - 1);
+//            // decrement subscribers
+//            int currentSubscribers = count.get(index);
+//            count.set(index, currentSubscribers - 1);
+//            return false;
 //        order.remove(id);
+            }
+
     }
 }
