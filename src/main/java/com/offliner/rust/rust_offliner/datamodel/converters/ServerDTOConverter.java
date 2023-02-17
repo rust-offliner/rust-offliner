@@ -13,6 +13,7 @@ public class ServerDTOConverter implements IBaseDTOConverter<BattlemetricsServer
     public ServerEntity convert(BattlemetricsServerDTO from) {
         ServerEntity serverEntity = new ServerEntity();
 
+        serverEntity.setServerId(from.getId());
         serverEntity.setFollowedPlayersList(new ArrayList<>());
         serverEntity.setWipeDate(from.getLastWiped());
         serverEntity.setMap(from.getMap());

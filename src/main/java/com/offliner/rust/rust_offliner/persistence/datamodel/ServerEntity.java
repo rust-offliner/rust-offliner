@@ -69,6 +69,14 @@ public class ServerEntity {
         return serverId;
     }
 
+    public void setServerId(long serverId) {
+        this.serverId = serverId;
+    }
+
+    public void setTracked(boolean tracked) {
+        this.tracked = tracked;
+    }
+
     public LocalDateTime getWipeDate() {
         return wipeDate;
     }
@@ -115,5 +123,20 @@ public class ServerEntity {
 
     public void setFollowedPlayersList(List<PlayerEntity> followedPlayersList) {
         this.followedPlayersList = followedPlayersList;
+    }
+
+    @Override
+    public String toString() {
+        return "ServerEntity{" +
+                "serverId=" + serverId +
+                ", wipeDate=" + wipeDate +
+                ", map=" + map +
+                ", addressIp='" + addressIp + '\'' +
+                ", port=" + port +
+                ", tracked=" + tracked +
+                ", users=" + users +
+                ", playersCount=" + playersCount +
+                ", followedPlayersList=" + followedPlayersList +
+                '}';
     }
 }

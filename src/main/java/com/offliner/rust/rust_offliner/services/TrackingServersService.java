@@ -6,6 +6,7 @@ import com.offliner.rust.rust_offliner.exceptions.KeyAlreadyExistsException;
 import com.offliner.rust.rust_offliner.exceptions.ServerNotTrackedException;
 import com.offliner.rust.rust_offliner.interfaces.IServerDao;
 import com.offliner.rust.rust_offliner.persistence.ServerDataStateManager;
+import com.offliner.rust.rust_offliner.persistence.datamodel.ServerEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,7 +60,10 @@ public class TrackingServersService {
 //        log.info("after");
         BattlemetricsServerDTO server = service.getServer(currentlyTrackedId);
 
-        serverDao.save(converter.convert(server));
+
+        ServerEntity serverEntity = converter.convert(server);
+
+        serverDao.save(serverEntity);
 
         log.info(String.valueOf(server));
         synchronized (lock) {

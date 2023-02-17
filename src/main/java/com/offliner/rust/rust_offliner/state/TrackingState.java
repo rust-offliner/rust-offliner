@@ -12,7 +12,7 @@ import org.springframework.data.relational.core.sql.In;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import javax.swing.plaf.nimbus.State;
+import java.time.Instant;
 import java.util.*;
 
 @Component
@@ -36,7 +36,7 @@ public class TrackingState {
     Object lock;
 
     @Autowired
-    StateCountAndOrderWrapper countAndOrder;
+    StateCODWrapper cod;
 
 //    private AtomicLong index;
 
@@ -64,7 +64,7 @@ public class TrackingState {
     }
 
     public List<Long> getOrder() {
-        return countAndOrder.getOrder();
+        return cod.getOrder();
     }
 
     public void add(long id) throws KeyAlreadyExistsException {
@@ -75,14 +75,14 @@ public class TrackingState {
             // we don't have state of this server yet
             state.put(id, null);
 
-            countAndOrder.add(id);
+            cod.add(id);
         }
     }
 
     public void add(long id, BattlemetricsServerDTO server) throws KeyAlreadyExistsException {
         synchronized (lock) {
                 if (state.containsKey(id)) {
-                    countAndOrder.increment(id);
+                    cod.increment(id);
 //                    int index = order.indexOf(id);
 //                    int currentSubscribers = count.get(index);
 //                    eachServerSubscribersCount.replace(id, currentSubscribers + 1);
@@ -93,7 +93,7 @@ public class TrackingState {
 //        order.add(id);
 //            order.add(id);
 //            count.add(1);
-            countAndOrder.add(id);
+            cod.add(id);
 //                eachServerSubscribersCount.put(id, 1);
 //        mapSize++;
 
@@ -142,7 +142,7 @@ public class TrackingState {
 //        index.decrementAndGet();
 //                if (eachServerSubscribersCount.get(id) == 1) {
 //            mapSize--;
-            if (countAndOrder.decrement(id)) {
+            if (cod.decrement(id)) {
                 state.remove(id);
                 return true;
             }
@@ -164,5 +164,9 @@ public class TrackingState {
 //        order.remove(id);
             }
 
+    }
+
+    public List<Instant> getLastServerFetchDate() {
+        return cod.getLastRequestDate();
     }
 }

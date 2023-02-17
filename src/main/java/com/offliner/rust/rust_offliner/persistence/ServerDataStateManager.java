@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,5 +104,9 @@ public class ServerDataStateManager {
             serverDao.updateTrackedState(id, false);
         }
 
+    }
+
+    public List<Instant> getLastServerFetchDate() {
+        return state.getLastServerFetchDate();
     }
 }

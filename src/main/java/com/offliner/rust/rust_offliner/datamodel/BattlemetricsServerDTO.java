@@ -76,6 +76,8 @@ public class BattlemetricsServerDTO {
         this.setName((String) attributes.get("name"));
         this.setCurrentPlayers((Integer) attributes.get("players"));
         this.setMaxPlayers((Integer) attributes.get("maxPlayers"));
+        this.setPort((Integer) attributes.get("port"));
+        this.setIpAddress((String) attributes.get("ip"));
 
         Map<String, Object> details = (Map<String, Object>) attributes.get("details");
         String lastWipedString = (String) details.get("rust_last_wipe");
@@ -95,9 +97,11 @@ public class BattlemetricsServerDTO {
                 throw new CustomMapNotSupportedException("Map is custom");
             }
         } catch (CustomMapNotSupportedException e) {
+            //TODO
             this.setMap(null);
         } catch (MapNotProceduralException e) {
             /*
+            //TODO
             jakas logika której jeszcz enie zrobilem misiaczku
              */
         }
@@ -224,7 +228,7 @@ public class BattlemetricsServerDTO {
                 ", name='" + name + '\'' +
                 ", currentPlayers=" + currentPlayers +
                 ", maxPlayers=" + maxPlayers +
-                ", playerList=" + playerList +
+//                ", playerList=" + playerList +
                 ", lastWiped=" + lastWiped +
                 ", map=" + map +
                 '}';
