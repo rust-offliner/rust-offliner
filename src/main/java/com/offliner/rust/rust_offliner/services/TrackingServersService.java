@@ -55,16 +55,18 @@ public class TrackingServersService {
         if (count == 0) {
             return;
         }
-//        log.info("before");
+        log.debug("before");
         long currentlyTrackedId = manager.getCurrentlyTrackedServer();
-//        log.info("after");
+        log.debug(currentlyTrackedId + "Currently tracked id");
+        log.info("after");
         BattlemetricsServerDTO server = service.getServer(currentlyTrackedId);
 
 
         ServerEntity serverEntity = converter.convert(server);
+        serverEntity.setTracked(true);
 
         serverDao.save(serverEntity);
-
+        log.info("to sie dzieje");
         log.info(String.valueOf(server));
         synchronized (lock) {
             manager.manage(currentlyTrackedId, server);

@@ -40,6 +40,10 @@ public class BattlemetricsServerDTO {
 
     public BattlemetricsServerDTO() { }
 
+    public BattlemetricsServerDTO(long id) {
+        this.id = id;
+    }
+
     public BattlemetricsServerDTO(long id, String name) {
         this.id = id;
         this.name = name;

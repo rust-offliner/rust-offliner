@@ -76,6 +76,7 @@ public class ServerController {
         if (bucket.tryConsume(1)) {
             String newToken = tokenHandler.handle(authorization);
             try {
+                log.debug("endpoint wywolany");
                 manager.add(id);
 //                log.info(serverService.getServerString(id));
                 return ResponseEntity.ok(new TokenizedResponse<>(newToken, bucket.getAvailableTokens(), null));
