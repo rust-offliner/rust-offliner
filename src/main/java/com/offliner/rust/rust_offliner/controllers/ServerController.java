@@ -73,7 +73,6 @@ public class ServerController {
             String newToken = tokenHandler.handle(authorization);
             try {
                 manager.add(id);
-
                 return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(id).toUri())
                         .header("X-Rate-Limit-Remaining", String.valueOf(bucket.getAvailableTokens()))
                         .build();
