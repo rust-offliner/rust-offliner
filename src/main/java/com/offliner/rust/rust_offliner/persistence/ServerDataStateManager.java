@@ -1,9 +1,12 @@
 package com.offliner.rust.rust_offliner.persistence;
 
 import com.offliner.rust.rust_offliner.datamodel.BattlemetricsServerDTO;
+import com.offliner.rust.rust_offliner.datamodel.converters.ServerDTOConverter;
 import com.offliner.rust.rust_offliner.exceptions.KeyAlreadyExistsException;
 import com.offliner.rust.rust_offliner.exceptions.ServerNotTrackedException;
 import com.offliner.rust.rust_offliner.interfaces.IServerDao;
+import com.offliner.rust.rust_offliner.persistence.datamodel.ServerEntity;
+import com.offliner.rust.rust_offliner.state.TrackableServer;
 import com.offliner.rust.rust_offliner.state.TrackingState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.PostConstruct;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 @Service
@@ -22,9 +26,11 @@ public class ServerDataStateManager {
 //    private Map<Long, BattlemetricsServerDTO> state = Collections.synchronizedMap(new HashMap<>());
     private static final Logger log = LoggerFactory.getLogger(ServerDataStateManager.class);
 
-    int i = 0;
+//    int i = 0;
 //    @Autowired
     IServerDao serverDao;
+
+    ServerDTOConverter converter;
 
 //
 //    @Autowired
@@ -34,10 +40,11 @@ public class ServerDataStateManager {
 //    @Autowired
     Object lock;
 
-    public ServerDataStateManager(IServerDao serverDao, TrackingState state, @Qualifier("lock") Object lock) {
+    public ServerDataStateManager(IServerDao serverDao, TrackingState state, @Qualifier("lock") Object lock, ServerDTOConverter converter) {
         this.serverDao = serverDao;
         this.state = state;
         this.lock = lock;
+        this.converter = converter;
     }
 
     @PostConstruct
@@ -50,25 +57,28 @@ public class ServerDataStateManager {
         serverDao.initTrackedState();
     }
 
-    public long getCurrentlyTrackedServer() {
-        List<Long> list;
+    public long getCurrentlyTrackedServer() throws ServerNotTrackedException {
+//        List<Long> list;
         // copy list to prevent excessively long usage of synchronized resource
-        synchronized (lock) {
-            log.info(state.getOrder().size() + "state");
-            list = new ArrayList<>(state.getOrder());
-        }
+//        synchronized (lock) {
+//            log.info(state.getOrder().size() + "state");
+//            list = new ArrayList<>(state.getOrder());
+//        }
+        int index = state.getOrder();
+        log.debug(index + "index w getCurrentlyTrackedServer w managerze");
         try {
-            log.info(String.valueOf(list.size()));
-            return list.get(i++);
+//            log.info(String.valueOf(list.size()));
+            return state.getByPosition(index).getId();
         } catch (IndexOutOfBoundsException e) {
+            // that should neven happen but just in case
             log.warn("State index out of bounds");
-            i = 0;
-            return list.get(i++);
+            state.setOrder(0);
+            return state.getByPosition(state.getOrder()).getId();
         }
     }
 
     public void manage(long id, BattlemetricsServerDTO server) throws KeyAlreadyExistsException, ServerNotTrackedException {
-        if (state.getOrder().contains(id)) {
+        if (state.contains(id)) {
             state.replace(id, server);
         } else {
             state.add(id, server);
@@ -79,15 +89,20 @@ public class ServerDataStateManager {
 //    AtomicLong counter;
 
     public void add(long id) throws KeyAlreadyExistsException {
-        state.add(id);
+        log.debug("w managerze na poczattku");
+        BattlemetricsServerDTO server = state.add(id);
+        log.debug("after adding to state");
+        ServerEntity serverEntity = converter.convert(server);
         if (serverDao.existsByServerId(id)) {
             serverDao.updateTrackedState(id, true);
+            return;
         }
-//        serverDao.save();
+        serverEntity.setTracked(true);
+        serverDao.save(serverEntity);
     }
 //
     public BattlemetricsServerDTO get(long id) throws ServerNotTrackedException {
-        return state.get(id);
+        return state.getById(id);
     }
 
 //    public
@@ -103,10 +118,14 @@ public class ServerDataStateManager {
         if (shouldRemoveFromDB) {
             serverDao.updateTrackedState(id, false);
         }
-
     }
 
-    public List<Instant> getLastServerFetchDate() {
-        return state.getLastServerFetchDate();
+    @Transactional
+    public void removeFromDB(long id) {
+        serverDao.updateTrackedState(id, false);
+    }
+
+    public Iterator<TrackableServer> getIterator() {
+        return state.getIterator();
     }
 }
