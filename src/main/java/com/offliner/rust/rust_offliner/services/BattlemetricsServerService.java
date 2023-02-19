@@ -19,14 +19,25 @@ public class BattlemetricsServerService {
         this.webClient = webClient;
     }
 
-    public BattlemetricsServerDTO getServer(int id) {
+    public BattlemetricsServerDTO getServer(long id) {
         return webClient
                 .get()
-                .uri("/servers/" + id + "?include=player&fields[player]=name,id,updatedAt&fields[server]=name,players,maxPlayers")
+                .uri("/servers/" + id + "?include=player&fields[player]=name,id,updatedAt&fields[server]=name,ip,port,players,maxPlayers,details")
                 .retrieve()
                 .onStatus(HttpStatus::isError, clientResponse -> Mono.empty())
                 .bodyToMono(BattlemetricsServerDTO.class)
                 .block();
     }
+
+    public String getServerString(long id) {
+        return webClient
+                .get()
+                .uri("/servers/" + id + "?include=player&fields[player]=name,id,updatedAt&fields[server]=name,ip,port,players,maxPlayers,details")
+                .retrieve()
+                .onStatus(HttpStatus::isError, clientResponse -> Mono.empty())
+                .bodyToMono(String.class)
+                .block();
+    }
+
 
 }

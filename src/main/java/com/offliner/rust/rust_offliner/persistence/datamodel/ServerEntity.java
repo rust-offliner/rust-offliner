@@ -27,6 +27,9 @@ public class ServerEntity {
     @Column(name = "port")
     private int port;
 
+    @Column(name = "tracked")
+    private boolean tracked;
+
     @ManyToMany
     @JoinTable(
             name = "servers_to_users",
@@ -66,6 +69,14 @@ public class ServerEntity {
         return serverId;
     }
 
+    public void setServerId(long serverId) {
+        this.serverId = serverId;
+    }
+
+    public void setTracked(boolean tracked) {
+        this.tracked = tracked;
+    }
+
     public LocalDateTime getWipeDate() {
         return wipeDate;
     }
@@ -76,6 +87,14 @@ public class ServerEntity {
 
     public MapEntity getMap() {
         return map;
+    }
+
+    public void setAddressIp(String addressIp) {
+        this.addressIp = addressIp;
+    }
+
+    public void setPort(int port) {
+        this.port = port;
     }
 
     public void setMap(MapEntity map) {
@@ -104,5 +123,20 @@ public class ServerEntity {
 
     public void setFollowedPlayersList(List<PlayerEntity> followedPlayersList) {
         this.followedPlayersList = followedPlayersList;
+    }
+
+    @Override
+    public String toString() {
+        return "ServerEntity{" +
+                "serverId=" + serverId +
+                ", wipeDate=" + wipeDate +
+                ", map=" + map +
+                ", addressIp='" + addressIp + '\'' +
+                ", port=" + port +
+                ", tracked=" + tracked +
+                ", users=" + users +
+                ", playersCount=" + playersCount +
+                ", followedPlayersList=" + followedPlayersList +
+                '}';
     }
 }
