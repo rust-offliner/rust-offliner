@@ -2,9 +2,7 @@ package com.offliner.rust.rust_offliner.persistence.datamodel;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.Date;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 @Entity
 @Table(name = "server")
@@ -30,13 +28,15 @@ public class ServerEntity {
     @Column(name = "tracked")
     private boolean tracked;
 
-    @ManyToMany
+    @ManyToMany(
+            cascade = {CascadeType.MERGE, CascadeType.PERSIST}
+    )
     @JoinTable(
             name = "servers_to_users",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "server_id")
+            joinColumns = @JoinColumn(name = "server_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
     )
-    private Set<UserEntity> users;
+    private Set<UserEntity> users = new HashSet<>();
 
     @Transient
     private int playersCount;
@@ -63,6 +63,16 @@ public class ServerEntity {
 
     public ServerEntity() {
 
+    }
+
+    public void addUser(UserEntity user) {
+        this.users.add(user);
+        user.getServers().add(this);
+    }
+
+    public void removeUser(UserEntity user) {
+        this.users.remove(user);
+        user.getServers().remove(this);
     }
 
     public long getServerId() {
@@ -125,6 +135,10 @@ public class ServerEntity {
         this.followedPlayersList = followedPlayersList;
     }
 
+    public boolean isTracked() {
+        return tracked;
+    }
+
     @Override
     public String toString() {
         return "ServerEntity{" +
@@ -134,9 +148,22 @@ public class ServerEntity {
                 ", addressIp='" + addressIp + '\'' +
                 ", port=" + port +
                 ", tracked=" + tracked +
-                ", users=" + users +
+//                ", users=" + users +
                 ", playersCount=" + playersCount +
-                ", followedPlayersList=" + followedPlayersList +
+//                ", followedPlayersList=" + followedPlayersList +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ServerEntity that = (ServerEntity) o;
+        return serverId == that.serverId && port == that.port && tracked == that.tracked && Objects.equals(wipeDate, that.wipeDate) && Objects.equals(addressIp, that.addressIp);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(serverId, wipeDate, map, addressIp, port, tracked, users, followedPlayersList);
     }
 }

@@ -12,7 +12,7 @@ import java.util.List;
 @Transactional
 public interface IServerDao extends CrudRepository<ServerEntity, Integer> {
 
-    ServerEntity findByServerId(int id);
+    ServerEntity findByServerId(long id);
 
     boolean existsByServerId(long id);
 
