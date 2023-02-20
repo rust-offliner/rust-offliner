@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,6 +38,7 @@ public class UnusedServersRemovalScheduler {
 
     @Scheduled(cron = "15,45 * * * * ?")
     @Transactional
+    @ConditionalOnProperty(name = "schedular.removal.enabled")
     public void remove() {
         Iterator<TrackableServer> iterator;
         Instant now = Instant.now();
