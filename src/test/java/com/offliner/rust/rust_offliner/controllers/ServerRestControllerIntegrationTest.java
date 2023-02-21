@@ -1,7 +1,6 @@
-package com.offliner.rust.rust_offliner;
+package com.offliner.rust.rust_offliner.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.offliner.rust.rust_offliner.exceptions.KeyAlreadyExistsException;
 import com.offliner.rust.rust_offliner.interfaces.IServerDao;
 import com.offliner.rust.rust_offliner.persistence.datamodel.ServerEntity;
 import com.offliner.rust.rust_offliner.security.model.JwtRequest;
