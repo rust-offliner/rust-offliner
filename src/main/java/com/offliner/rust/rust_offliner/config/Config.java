@@ -1,7 +1,6 @@
 package com.offliner.rust.rust_offliner.config;
 
 import com.offliner.rust.rust_offliner.state.TrackingState;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;

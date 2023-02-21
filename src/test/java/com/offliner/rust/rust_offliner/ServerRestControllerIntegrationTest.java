@@ -1,6 +1,7 @@
 package com.offliner.rust.rust_offliner;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.offliner.rust.rust_offliner.exceptions.KeyAlreadyExistsException;
 import com.offliner.rust.rust_offliner.interfaces.IServerDao;
 import com.offliner.rust.rust_offliner.persistence.datamodel.ServerEntity;
 import com.offliner.rust.rust_offliner.security.model.JwtRequest;
@@ -17,11 +18,11 @@ import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -51,9 +52,9 @@ public class ServerRestControllerIntegrationTest {
         )
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.jwtToken").exists())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.jwtToken").isString())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.jwtToken").value(Matchers.matchesPattern(regex)))
+                .andExpect(jsonPath("$.jwtToken").exists())
+                .andExpect(jsonPath("$.jwtToken").isString())
+                .andExpect(jsonPath("$.jwtToken").value(Matchers.matchesPattern(regex)))
                 .andReturn();
         String responseAsString = result.getResponse().getContentAsString();
         JwtResponse response = new ObjectMapper().readValue(responseAsString, JwtResponse.class);
@@ -71,10 +72,10 @@ public class ServerRestControllerIntegrationTest {
                         .post("/api/follow/{id}", id)
                         .header("Authorization", authorization)
         )
-                .andExpect(MockMvcResultMatchers.status().isCreated())
-                .andExpect(MockMvcResultMatchers.header().exists("X-Rate-Limit-Remaining"))
-                .andExpect(MockMvcResultMatchers.header().exists("Location"))
-                .andExpect(MockMvcResultMatchers.header().string("Location", "http://localhost/api/" + id))
+                .andExpect(status().isCreated())
+                .andExpect(header().exists("X-Rate-Limit-Remaining"))
+                .andExpect(header().exists("Location"))
+                .andExpect(header().string("Location", "http://localhost/api/" + id))
                 .andReturn();
 
         ServerEntity serverAfter = dao.findByServerId(id);
@@ -84,6 +85,33 @@ public class ServerRestControllerIntegrationTest {
         assertEquals(serverBefore.getIPAddress(), serverAfter.getIPAddress());
         assertEquals(serverBefore.getWipeDate(), serverAfter.getWipeDate());
         assertNotEquals(serverBefore.isTracked(), serverAfter.isTracked());
+    }
+
+    @Test
+    void followAlreadyTrackedServerThrowsNotAcceptable() throws Exception {
+        long id = 9565288; //rusticated eu trio monday
+
+        // make server followed before actual test
+        mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .post("/api/follow/{id}", id)
+                                .header("Authorization", authorization)
+                )
+                .andExpect(status().isCreated())
+                .andExpect(header().exists("X-Rate-Limit-Remaining"))
+                .andExpect(header().exists("Location"))
+                .andExpect(header().string("Location", "http://localhost/api/" + id))
+                .andReturn();
+
+
+        // second call to already tracked server
+        mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .post("/api/follow/{id}", id)
+                                .header("Authorization", authorization)
+                )
+                .andExpect(status().isNotAcceptable())
+                .andReturn();
     }
 
     public static String asJsonString(final Object obj) {
