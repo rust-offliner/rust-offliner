@@ -34,11 +34,15 @@ public class TrackingState {
     // count how many subscribers per each server (id) (in the same order as list above)
 //    private List<Integer> count = Collections.synchronizedList(new ArrayList<>());
 
-    @Autowired
-    @Qualifier("lock")
-    Object lock;
-
 //    @Autowired
+//    @Qualifier("lock")
+    private final Object lock;
+
+    public TrackingState(@Qualifier("lock") Object lock) {
+        this.lock = lock;
+    }
+
+    //    @Autowired
 //    StateCODWrapper cod;
 
 

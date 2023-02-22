@@ -60,6 +60,8 @@ public class ServerRestControllerIntegrationTest {
         authorization = "Bearer " + response.jwtToken();
     }
 
+
+    //TODO test database
     @Test
     void followServerMakesServerTrackedInDatabase() throws Exception {
 
