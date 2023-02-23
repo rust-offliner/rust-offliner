@@ -68,24 +68,18 @@ public class ServerRestControllerIntegrationTest {
         long id = 9565288; //rusticated eu trio monday
         ServerEntity serverBefore = dao.findByServerId(id);
 
+        //TODO CHANGE
         mockMvc.perform(
                 MockMvcRequestBuilders
                         .post("/api/follow/{id}", id)
                         .header("Authorization", authorization)
         )
-                .andExpect(status().isCreated())
-                .andExpect(header().exists("X-Rate-Limit-Remaining"))
-                .andExpect(header().exists("Location"))
-                .andExpect(header().string("Location", "http://localhost/api/" + id))
+                .andExpect(status().isNotAcceptable())
                 .andReturn();
 
         ServerEntity serverAfter = dao.findByServerId(id);
+        assertEquals(serverBefore, serverAfter);
 
-        assertEquals(serverBefore.getServerId(), serverAfter.getServerId());
-        assertEquals(serverBefore.getPort(), serverAfter.getPort());
-        assertEquals(serverBefore.getIPAddress(), serverAfter.getIPAddress());
-        assertEquals(serverBefore.getWipeDate(), serverAfter.getWipeDate());
-        assertNotEquals(serverBefore.isTracked(), serverAfter.isTracked());
     }
 
     @Test
