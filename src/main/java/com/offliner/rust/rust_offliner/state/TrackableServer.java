@@ -1,20 +1,19 @@
 package com.offliner.rust.rust_offliner.state;
 
-import com.offliner.rust.rust_offliner.datamodel.BattlemetricsServerDTO;
+import com.offliner.rust.rust_offliner.datamodel.EServerDto;
 
 import java.time.Instant;
-import java.util.Iterator;
 
 public class TrackableServer {
 
-    private BattlemetricsServerDTO data;
+    private EServerDto data;
     private long id;
 //    int order;
     private int count;
 
     private Instant lastRequested;
 
-    public TrackableServer(long id, BattlemetricsServerDTO data, int count,Instant instant) {
+    public TrackableServer(long id, EServerDto data, int count, Instant instant) {
         this.data = data;
         this.id = id;
 //        this.order = order;
@@ -38,7 +37,7 @@ public class TrackableServer {
         this.count--;
     }
 
-    public BattlemetricsServerDTO getData() {
+    public EServerDto getData() {
         return data;
     }
 
@@ -54,7 +53,7 @@ public class TrackableServer {
         return count;
     }
 
-    public void setData(BattlemetricsServerDTO data) {
+    public void setData(EServerDto data) {
         this.data = data;
     }
 
@@ -80,8 +79,8 @@ public class TrackableServer {
         if (obj instanceof Long) {
             return (Long) obj == id;
         }
-        if (obj instanceof BattlemetricsServerDTO) {
-            return (((BattlemetricsServerDTO) obj).getId() == id && obj.equals(data));
+        if (obj instanceof EServerDto) {
+            return (((EServerDto) obj).getId() == id && obj.equals(data));
         }
         return false;
     }

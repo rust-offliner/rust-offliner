@@ -1,12 +1,11 @@
 package com.offliner.rust.rust_offliner.state;
 
-import com.offliner.rust.rust_offliner.datamodel.BattlemetricsServerDTO;
+import com.offliner.rust.rust_offliner.datamodel.EServerDto;
 import com.offliner.rust.rust_offliner.exceptions.KeyAlreadyExistsException;
 import com.offliner.rust.rust_offliner.exceptions.ServerNotTrackedException;
 import com.offliner.rust.rust_offliner.services.TrackingServersService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +24,6 @@ public class TrackingState {
 
 //    private static TrackingState instance = null;
 
-//    private Map<Long, BattlemetricsServerDTO> state = Collections.synchronizedMap(new HashMap<>());
 
     // we need an additional map to keep track of how many users follow each server (and also order for tracking)
 //    private Map<Long, Integer> eachServerSubscribersCount = Collections.synchronizedMap(new LinkedHashMap<>());
@@ -75,10 +73,10 @@ public class TrackingState {
 //        return cod.getOrder();
 //    }
 
-    public BattlemetricsServerDTO add(long id) throws KeyAlreadyExistsException {
+    public EServerDto add(long id) throws KeyAlreadyExistsException {
         log.debug("rozpoczynamy dodawnaie do listy");
         Long idWrapper = id;
-        TrackableServer server = new TrackableServer(id, new BattlemetricsServerDTO(id), 1, Instant.now());
+        TrackableServer server = new TrackableServer(id, new EServerDto(id), 1, Instant.now());
         synchronized (lock) {
 //            if (state.containsKey(id)) {
 //                throw new KeyAlreadyExistsException("The key you are trying to put already exists");
@@ -96,7 +94,7 @@ public class TrackingState {
         return server.getData();
     }
 
-    public void add(long id, BattlemetricsServerDTO serverDto) throws KeyAlreadyExistsException {
+    public void add(long id, EServerDto serverDto) throws KeyAlreadyExistsException {
         Long idWrapper = id;
         synchronized (lock) {
             if (contains(idWrapper)) {
@@ -129,7 +127,7 @@ public class TrackingState {
 
     }
 
-    public BattlemetricsServerDTO getById(long id) throws ServerNotTrackedException {
+    public EServerDto getById(long id) throws ServerNotTrackedException {
         Long idWrapper = id;
         synchronized (lock) {
             if (!contains(idWrapper)) {
@@ -142,7 +140,7 @@ public class TrackingState {
         }
     }
 
-    public BattlemetricsServerDTO getByPosition(int index) {
+    public EServerDto getByPosition(int index) {
         synchronized (lock) {
             if (index > list.size()) {
                 throw new ArrayIndexOutOfBoundsException();
@@ -153,7 +151,7 @@ public class TrackingState {
         }
     }
 
-    public void replace(long id, BattlemetricsServerDTO serverDto) throws ServerNotTrackedException {
+    public void replace(long id, EServerDto serverDto) throws ServerNotTrackedException {
         Long idWrapper = id;
         log.debug("id w replace " + idWrapper);
         synchronized (lock) {

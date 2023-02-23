@@ -20,13 +20,16 @@ public class Config {
 //    @Value("${bm.apiKey}")
 //    private String bmApiKey;
 
-    @Value("${battlemetrics.api.key}")
+    @Value("${external.api.key}")
     private String key;
 
+    @Value("${external.url}")
+    private String url;
+
     @Bean
-    public WebClient bmWebClient() {
+    public WebClient externalWebClient() {
         return WebClient.builder()
-                .baseUrl("https://api.battlemetrics.com")
+                .baseUrl(url)
                 .defaultHeader("Authorization", key)
                 .build();
     }

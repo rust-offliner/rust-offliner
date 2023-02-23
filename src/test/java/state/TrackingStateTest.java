@@ -1,21 +1,15 @@
 package state;
 
-import com.offliner.rust.rust_offliner.datamodel.BattlemetricsServerDTO;
+import com.offliner.rust.rust_offliner.datamodel.EServerDto;
 import com.offliner.rust.rust_offliner.exceptions.KeyAlreadyExistsException;
 import com.offliner.rust.rust_offliner.exceptions.ServerNotTrackedException;
 import com.offliner.rust.rust_offliner.state.TrackingState;
-import org.hamcrest.Matchers;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
-import static org.hamcrest.Matchers.*;
-import static org.hamcrest.MatcherAssert.*;
 
 @ExtendWith(MockitoExtension.class)
 public class TrackingStateTest {
@@ -58,7 +52,7 @@ public class TrackingStateTest {
     void getByIdFromListIsOk() throws KeyAlreadyExistsException, ServerNotTrackedException {
         long id = 123;
         state.add(id);
-        BattlemetricsServerDTO server = state.getById(id);
+        EServerDto server = state.getById(id);
         assertEquals(server.getId(), id);
     }
 
@@ -91,7 +85,7 @@ public class TrackingStateTest {
     @Test
     void replaceByNonexistentIdThrowsException() {
         long id = 123;
-        BattlemetricsServerDTO serverDTO = new BattlemetricsServerDTO(id);
+        EServerDto serverDTO = new EServerDto(id);
         assertThrows(ServerNotTrackedException.class, () -> {
            state.replace(id, serverDTO);
         });
@@ -100,10 +94,10 @@ public class TrackingStateTest {
     @Test
     void replaceByIdIsOk() throws KeyAlreadyExistsException, ServerNotTrackedException {
         long id = 123;
-        BattlemetricsServerDTO toReplace = new BattlemetricsServerDTO(id, "test");
-        BattlemetricsServerDTO oldServer = state.add(id);
+        EServerDto toReplace = new EServerDto(id, "test");
+        EServerDto oldServer = state.add(id);
         state.replace(id, toReplace);
-        BattlemetricsServerDTO newServer = state.getById(id);
+        EServerDto newServer = state.getById(id);
 
         // meaning data is not equal
         assertNull(oldServer.getName());

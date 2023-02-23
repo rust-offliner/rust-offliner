@@ -1,6 +1,6 @@
 package com.offliner.rust.rust_offliner.persistence;
 
-import com.offliner.rust.rust_offliner.datamodel.BattlemetricsServerDTO;
+import com.offliner.rust.rust_offliner.datamodel.EServerDto;
 import com.offliner.rust.rust_offliner.datamodel.converters.ServerDTOConverter;
 import com.offliner.rust.rust_offliner.exceptions.KeyAlreadyExistsException;
 import com.offliner.rust.rust_offliner.exceptions.ServerNotTrackedException;
@@ -15,15 +15,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
-import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 @Service
 public class ServerDataStateManager {
-
-//    private Map<Long, BattlemetricsServerDTO> state = Collections.synchronizedMap(new HashMap<>());
     private static final Logger log = LoggerFactory.getLogger(ServerDataStateManager.class);
 
 //    int i = 0;
@@ -77,7 +72,7 @@ public class ServerDataStateManager {
         }
     }
 
-    public void manage(long id, BattlemetricsServerDTO server) throws KeyAlreadyExistsException, ServerNotTrackedException {
+    public void manage(long id, EServerDto server) throws KeyAlreadyExistsException, ServerNotTrackedException {
         if (state.contains(id)) {
             state.replace(id, server);
         } else {
@@ -90,7 +85,7 @@ public class ServerDataStateManager {
 
     public void add(long id) throws KeyAlreadyExistsException {
         log.debug("w managerze na poczattku");
-        BattlemetricsServerDTO server = state.add(id);
+        EServerDto server = state.add(id);
         log.debug("after adding to state");
         ServerEntity serverEntity = converter.convert(server);
         if (serverDao.existsByServerId(id)) {
@@ -101,14 +96,13 @@ public class ServerDataStateManager {
         serverDao.save(serverEntity);
     }
 //
-    public BattlemetricsServerDTO get(long id) throws ServerNotTrackedException {
+    public EServerDto get(long id) throws ServerNotTrackedException {
         return state.getById(id);
     }
 
 //    public
 //
 //    @Override
-//    public boolean replace(long id, BattlemetricsServerDTO server) throws ServerNotTrackedException {
 //        super.replace(id, server);
 //        return true;
 //    }

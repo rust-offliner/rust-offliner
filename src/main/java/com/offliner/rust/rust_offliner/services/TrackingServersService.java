@@ -1,6 +1,6 @@
 package com.offliner.rust.rust_offliner.services;
 
-import com.offliner.rust.rust_offliner.datamodel.BattlemetricsServerDTO;
+import com.offliner.rust.rust_offliner.datamodel.EServerDto;
 import com.offliner.rust.rust_offliner.datamodel.converters.ServerDTOConverter;
 import com.offliner.rust.rust_offliner.exceptions.KeyAlreadyExistsException;
 import com.offliner.rust.rust_offliner.exceptions.ServerNotTrackedException;
@@ -25,7 +25,7 @@ public class TrackingServersService {
     IServerDao serverDao;
 
     @Autowired
-    BattlemetricsServerService service;
+    EServerService service;
 
     @Autowired
     ServerDataStateManager manager;
@@ -37,7 +37,7 @@ public class TrackingServersService {
     @Qualifier("lock")
     Object lock;
 
-    @Value("${battlemetrics.tracked.max}")
+    @Value("${external.tracked.max}")
     private int maxTrackedServers;
 
 //    @Autowired
@@ -59,7 +59,7 @@ public class TrackingServersService {
         long currentlyTrackedId = manager.getCurrentlyTrackedServer();
         log.debug(currentlyTrackedId + "Currently tracked id");
         log.info("after");
-        BattlemetricsServerDTO server = service.getServer(currentlyTrackedId);
+        EServerDto server = service.getServer(currentlyTrackedId);
 
 
         ServerEntity serverEntity = converter.convert(server);
@@ -74,7 +74,6 @@ public class TrackingServersService {
 
 //        long pagingIndex = index.get(); // prevent mutating this field and breaking loop while updating state in other class
 //        for (int i = (int) pagingIndex; i < pagingIndex + 10; ++i) {
-//            BattlemetricsServerDTO server = service.getServer(tracked.get(i));
 //            try {
 //                manager.replace(tracked.get(i), server);
 //            } catch (ServerNotTrackedException e) {
