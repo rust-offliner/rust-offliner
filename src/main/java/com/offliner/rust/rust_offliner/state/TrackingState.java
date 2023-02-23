@@ -127,7 +127,7 @@ public class TrackingState {
 
     }
 
-    public EServerDto getById(long id) throws ServerNotTrackedException {
+    public TrackableServer getById(long id) throws ServerNotTrackedException {
         Long idWrapper = id;
         synchronized (lock) {
             if (!contains(idWrapper)) {
@@ -136,7 +136,7 @@ public class TrackingState {
             }
             TrackableServer server = list.get(indexOf(idWrapper));
             server.setLastRequested(Instant.now());
-            return server.getData();
+            return server;
         }
     }
 
@@ -163,6 +163,7 @@ public class TrackingState {
             log.debug("dane serwera " + server);
             server.setData(serverDto);
             server.setLastRequested(Instant.now());
+//            server.setCount(server.getCount() + 1);
 //            state.replace(id, server);
 //            list.set()
         }

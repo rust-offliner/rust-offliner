@@ -73,11 +73,11 @@ public class ServerDataStateManager {
     }
 
     public void manage(long id, EServerDto server) throws KeyAlreadyExistsException, ServerNotTrackedException {
-        if (state.contains(id)) {
-            state.replace(id, server);
-        } else {
-            state.add(id, server);
-        }
+//        if (state.contains(id)) {
+//            state.replace(id, server);
+//        } else {
+        state.add(id, server);
+//        }
     }
 
 //    @Autowired
@@ -97,7 +97,7 @@ public class ServerDataStateManager {
     }
 //
     public EServerDto get(long id) throws ServerNotTrackedException {
-        return state.getById(id);
+        return state.getById(id).getData();
     }
 
 //    public

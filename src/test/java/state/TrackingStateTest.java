@@ -52,7 +52,7 @@ public class TrackingStateTest {
     void getByIdFromListIsOk() throws KeyAlreadyExistsException, ServerNotTrackedException {
         long id = 123;
         state.add(id);
-        EServerDto server = state.getById(id);
+        EServerDto server = state.getById(id).getData();
         assertEquals(server.getId(), id);
     }
 
@@ -97,7 +97,7 @@ public class TrackingStateTest {
         EServerDto toReplace = new EServerDto(id, "test");
         EServerDto oldServer = state.add(id);
         state.replace(id, toReplace);
-        EServerDto newServer = state.getById(id);
+        EServerDto newServer = state.getById(id).getData();
 
         // meaning data is not equal
         assertNull(oldServer.getName());
