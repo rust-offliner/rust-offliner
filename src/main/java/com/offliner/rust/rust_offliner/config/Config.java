@@ -1,7 +1,6 @@
 package com.offliner.rust.rust_offliner.config;
 
 import com.offliner.rust.rust_offliner.state.TrackingState;
-import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -21,13 +20,16 @@ public class Config {
 //    @Value("${bm.apiKey}")
 //    private String bmApiKey;
 
-    @Value("${battlemetrics.api.key}")
+    @Value("${external.api.key}")
     private String key;
 
+    @Value("${external.url}")
+    private String url;
+
     @Bean
-    public WebClient bmWebClient() {
+    public WebClient externalWebClient() {
         return WebClient.builder()
-                .baseUrl("https://api.battlemetrics.com")
+                .baseUrl(url)
                 .defaultHeader("Authorization", key)
                 .build();
     }

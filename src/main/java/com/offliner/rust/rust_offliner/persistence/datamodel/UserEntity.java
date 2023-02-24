@@ -3,6 +3,7 @@ package com.offliner.rust.rust_offliner.persistence.datamodel;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -22,7 +23,7 @@ public class UserEntity {
     private String password;
 
     @ManyToMany(mappedBy = "users")
-    private Set<ServerEntity> servers;
+    private Set<ServerEntity> servers = new HashSet<>();
 
     public long getId() {
         return id;
@@ -44,4 +45,7 @@ public class UserEntity {
         this.password = password;
     }
 
+    public Set<ServerEntity> getServers() {
+        return servers;
+    }
 }

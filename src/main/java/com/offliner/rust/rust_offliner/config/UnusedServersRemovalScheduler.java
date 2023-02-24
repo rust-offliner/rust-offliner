@@ -3,40 +3,46 @@ package com.offliner.rust.rust_offliner.config;
 import com.offliner.rust.rust_offliner.interfaces.IServerDao;
 import com.offliner.rust.rust_offliner.persistence.ServerDataStateManager;
 import com.offliner.rust.rust_offliner.state.TrackableServer;
-import com.offliner.rust.rust_offliner.state.TrackingState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Instant;
-import java.util.Date;
 import java.util.Iterator;
-import java.util.List;
 
 @Component
 public class UnusedServersRemovalScheduler {
 
     private static final Logger log = LoggerFactory.getLogger(UnusedServersRemovalScheduler.class);
 
-    @Autowired
-    IServerDao serverDao;
+//    @Autowired
+    final IServerDao serverDao;
 
-    @Autowired
-    @Qualifier("lock")
-    Object lock;
+//    @Autowired
+//    @Qualifier("lock")
+    final Object lock;
 
 //    @Autowired
 //    TrackingState state;
 
+//    @Autowired
+    final ServerDataStateManager manager;
+
     @Autowired
-    ServerDataStateManager manager;
+    public UnusedServersRemovalScheduler(@Qualifier("lock") Object lock, IServerDao serverDao, ServerDataStateManager manager) {
+        this.manager = manager;
+        this.lock = lock;
+        this.serverDao = serverDao;
+    }
 
     @Scheduled(cron = "15,45 * * * * ?")
     @Transactional
+    @ConditionalOnProperty(name = "schedular.removal.enabled")
     public void remove() {
         Iterator<TrackableServer> iterator;
         Instant now = Instant.now();

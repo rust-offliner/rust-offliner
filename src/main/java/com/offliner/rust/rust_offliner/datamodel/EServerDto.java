@@ -11,7 +11,7 @@ import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.util.*;
 
-public class BattlemetricsServerDTO {
+public class EServerDto {
 
     private long id;
     private String name;
@@ -38,13 +38,13 @@ public class BattlemetricsServerDTO {
 
 
 
-    public BattlemetricsServerDTO() { }
+    public EServerDto() { }
 
-    public BattlemetricsServerDTO(long id) {
+    public EServerDto(long id) {
         this.id = id;
     }
 
-    public BattlemetricsServerDTO(long id, String name) {
+    public EServerDto(long id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -73,6 +73,7 @@ public class BattlemetricsServerDTO {
      * @throws ParseException
      */
     @JsonProperty("data")
+    @SuppressWarnings("unchecked")
     private void unpackNestedData(@NotNull Map<String, Object> data) throws ParseException {
         this.setId(Long.parseLong((String) data.get("id")));
         Map<String, Object> attributes = (Map<String, Object>) data.get("attributes");
@@ -216,7 +217,7 @@ public class BattlemetricsServerDTO {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        BattlemetricsServerDTO serverDTO = (BattlemetricsServerDTO) o;
+        EServerDto serverDTO = (EServerDto) o;
         return id == serverDTO.id && currentPlayers == serverDTO.currentPlayers && maxPlayers == serverDTO.maxPlayers && name.equals(serverDTO.name) && playerList.equals(serverDTO.playerList);
     }
 
@@ -227,7 +228,7 @@ public class BattlemetricsServerDTO {
 
     @Override
     public String toString() {
-        return "BattlemetricsServerDTO{" +
+        return "EServerDto{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", currentPlayers=" + currentPlayers +

@@ -8,8 +8,8 @@ import java.time.LocalDateTime;
 public class PlayerEntity {
 
     @Id
-    @Column(name = "battlemetrics_id")
-    private long BMID;
+    @Column(name = "bm_id")
+    private long EID;
 
     @Column(name = "name")
     private String name;
@@ -63,13 +63,13 @@ public class PlayerEntity {
         this.server = server;
     }
 
-    public PlayerEntity(long BMID, LocalDateTime lastSeen) {
-        this.BMID = BMID;
+    public PlayerEntity(long EID, LocalDateTime lastSeen) {
+        this.EID = EID;
         this.lastSeen = lastSeen;
     }
 
-    public PlayerEntity(long BMID, String name, LocalDateTime lastSeen) {
-        this.BMID = BMID;
+    public PlayerEntity(long EID, String name, LocalDateTime lastSeen) {
+        this.EID = EID;
         this.name = name;
         this.lastSeen = lastSeen;
     }
@@ -87,8 +87,8 @@ public class PlayerEntity {
     }
 
 
-    public long getBMID() {
-        return BMID;
+    public long getEID() {
+        return EID;
     }
 
     public LocalDateTime getLastSeen() {

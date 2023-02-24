@@ -1,11 +1,11 @@
 package com.offliner.rust.rust_offliner.controllers;
 
-import com.offliner.rust.rust_offliner.datamodel.BattlemetricsServerDTO;
+import com.offliner.rust.rust_offliner.datamodel.EServerDto;
 import com.offliner.rust.rust_offliner.datamodel.TokenizedResponse;
 import com.offliner.rust.rust_offliner.exceptions.KeyAlreadyExistsException;
 import com.offliner.rust.rust_offliner.persistence.ServerDataStateManager;
 import com.offliner.rust.rust_offliner.security.TokenHandler;
-import com.offliner.rust.rust_offliner.services.BattlemetricsServerService;
+import com.offliner.rust.rust_offliner.services.EServerService;
 import io.github.bucket4j.Bandwidth;
 import io.github.bucket4j.Bucket;
 import io.github.bucket4j.Refill;
@@ -25,7 +25,7 @@ import java.time.Duration;
 public class ServerController {
 
     @Autowired
-    BattlemetricsServerService serverService;
+    EServerService serverService;
 
     public static final Logger log = LoggerFactory.getLogger(ServerController.class);
 
@@ -45,10 +45,9 @@ public class ServerController {
     public ResponseEntity<TokenizedResponse<?>> getServer(@PathVariable int id, @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization) {
         if (bucket.tryConsume(1)) {
             String newToken = tokenHandler.handle(authorization);
-//            BattlemetricsServerDTO server = serverService.getServer(id);
 //            try {
                 //TODO change null and catch block
-                BattlemetricsServerDTO server = null;
+                EServerDto server = null;
                 return ResponseEntity.ok(new TokenizedResponse(newToken, bucket.getAvailableTokens(), server));
 //            } catch (ServerNotTrackedException e) {
 //                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).build(); // server is not followed yet
@@ -73,8 +72,7 @@ public class ServerController {
             String newToken = tokenHandler.handle(authorization);
             try {
                 manager.add(id);
-
-                return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(id).toUri())
+                return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentServletMapping().path("/api/{id}").buildAndExpand(id).toUri())
                         .header("X-Rate-Limit-Remaining", String.valueOf(bucket.getAvailableTokens()))
                         .build();
             } catch (KeyAlreadyExistsException e) {
