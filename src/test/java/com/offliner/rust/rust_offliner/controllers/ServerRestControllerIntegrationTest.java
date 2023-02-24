@@ -109,6 +109,17 @@ public class ServerRestControllerIntegrationTest {
                 .andReturn();
     }
 
+    @Test
+    void followServerWithoutAuthenticationThrowsException() throws Exception {
+        long id = 123;
+        mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .post("/api/follow/{id}", id)
+                )
+                .andExpect(status().isUnauthorized())
+                .andReturn();
+    }
+
     public static String asJsonString(final Object obj) {
         try {
             return new ObjectMapper().writeValueAsString(obj);

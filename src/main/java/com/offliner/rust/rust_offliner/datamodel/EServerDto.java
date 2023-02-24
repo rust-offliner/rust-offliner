@@ -73,6 +73,7 @@ public class EServerDto {
      * @throws ParseException
      */
     @JsonProperty("data")
+    @SuppressWarnings("unchecked")
     private void unpackNestedData(@NotNull Map<String, Object> data) throws ParseException {
         this.setId(Long.parseLong((String) data.get("id")));
         Map<String, Object> attributes = (Map<String, Object>) data.get("attributes");

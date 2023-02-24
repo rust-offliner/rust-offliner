@@ -122,5 +122,13 @@ public class TrackingStateTest {
         });
     }
 
+    @Test
+    void getByPositionOutsideBoundaries() throws KeyAlreadyExistsException {
+        long id = 123;
+        state.add(id);
+        assertInstanceOf(EServerDto.class, state.getByPosition(0));
+        assertThrows(IndexOutOfBoundsException.class, () -> state.getByPosition(1));
+    }
+
     // TODO test for removing server with count > 1
 }

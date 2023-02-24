@@ -143,7 +143,7 @@ public class TrackingState {
     public EServerDto getByPosition(int index) {
         synchronized (lock) {
             if (index > list.size()) {
-                throw new ArrayIndexOutOfBoundsException();
+                throw new IndexOutOfBoundsException();
             }
             TrackableServer server = list.get(index);
             server.setLastRequested(Instant.now());
