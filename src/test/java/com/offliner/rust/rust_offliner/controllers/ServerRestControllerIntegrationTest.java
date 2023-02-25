@@ -2,7 +2,9 @@ package com.offliner.rust.rust_offliner.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.offliner.rust.rust_offliner.interfaces.IServerDao;
+import com.offliner.rust.rust_offliner.interfaces.IUserDao;
 import com.offliner.rust.rust_offliner.persistence.datamodel.ServerEntity;
+import com.offliner.rust.rust_offliner.persistence.datamodel.UserEntity;
 import com.offliner.rust.rust_offliner.security.model.JwtRequest;
 import com.offliner.rust.rust_offliner.security.model.JwtResponse;
 import org.hamcrest.Matchers;
@@ -13,11 +15,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -36,11 +44,17 @@ public class ServerRestControllerIntegrationTest {
     @Autowired
     private IServerDao dao;
 
+    @Autowired
+    private IUserDao userDao;
+
     private String authorization;
+
+    private final String username = "testfsdfds";
+    private final String password = "zjeba";
 
     @BeforeEach
      void getCredentials() throws Exception {
-        JwtRequest credentials = new JwtRequest("testfsdfds", "zjeba");
+        JwtRequest credentials = new JwtRequest(username, password);
         String regex = "^(?:[\\w-]*\\.){2}[\\w-]*$";
         MvcResult result = mockMvc.perform(
                 MockMvcRequestBuilders
@@ -92,10 +106,10 @@ public class ServerRestControllerIntegrationTest {
                                 .post("/api/follow/{id}", id)
                                 .header("Authorization", authorization)
                 )
-                .andExpect(status().isCreated())
-                .andExpect(header().exists("X-Rate-Limit-Remaining"))
-                .andExpect(header().exists("Location"))
-                .andExpect(header().string("Location", "http://localhost/api/" + id))
+//                .andExpect(status().isCreated())
+//                .andExpect(header().exists("X-Rate-Limit-Remaining"))
+//                .andExpect(header().exists("Location"))
+//                .andExpect(header().string("Location", "http://localhost/api/" + id))
                 .andReturn();
 
 
@@ -118,6 +132,25 @@ public class ServerRestControllerIntegrationTest {
                 )
                 .andExpect(status().isUnauthorized())
                 .andReturn();
+    }
+
+    @Test
+    void followServerCorrectlyUpdatesManyToManyRelationshipInDB() throws Exception {
+        long id = 9565288; //rusticated eu trio monday
+        UserEntity user = userDao.findByUsername(username);
+        mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .post("/api/follow/{id}", id)
+                                .header("Authorization", authorization)
+                )
+                .andExpect(status().isCreated())
+                .andExpect(header().exists("X-Rate-Limit-Remaining"))
+                .andExpect(header().exists("Location"))
+                .andExpect(header().string("Location", "http://localhost/api/" + id))
+                .andReturn();
+        long count = dao.countAllByUsersIsAndServerIdEquals(id, user.getId());
+
+        assertEquals(count, 1);
     }
 
     public static String asJsonString(final Object obj) {

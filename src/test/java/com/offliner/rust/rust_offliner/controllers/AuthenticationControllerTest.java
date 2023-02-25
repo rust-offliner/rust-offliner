@@ -3,6 +3,7 @@ package com.offliner.rust.rust_offliner.controllers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.offliner.rust.rust_offliner.security.JwtTokenUtil;
 import com.offliner.rust.rust_offliner.security.model.JwtRequest;
+import com.offliner.rust.rust_offliner.security.model.JwtResponse;
 import com.offliner.rust.rust_offliner.services.security.JwtUserDetailsService;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
@@ -70,9 +71,9 @@ public class AuthenticationControllerTest {
                 .andReturn();
 
         String res = result.getResponse().getContentAsString();
-        String token = res.substring(13, res.length() - 2);
+        JwtResponse response = new ObjectMapper().readValue(res, JwtResponse.class);
         UserDetails details = service.loadUserByUsername(credentials.getUsername());
-        assertTrue(util.validate(token, details));
+        assertTrue(util.validate(response.jwtToken(), details));
 
     }
 
