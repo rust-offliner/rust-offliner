@@ -4,6 +4,7 @@ import com.offliner.rust.rust_offliner.datamodel.EServerDto;
 import com.offliner.rust.rust_offliner.datamodel.TokenizedResponse;
 import com.offliner.rust.rust_offliner.exceptions.KeyAlreadyExistsException;
 import com.offliner.rust.rust_offliner.persistence.ServerDataStateManager;
+import com.offliner.rust.rust_offliner.security.JwtTokenUtil;
 import com.offliner.rust.rust_offliner.security.TokenHandler;
 import com.offliner.rust.rust_offliner.services.EServerService;
 import io.github.bucket4j.Bandwidth;
@@ -33,6 +34,9 @@ public class ServerController {
     ServerDataStateManager manager;
     @Autowired
     TokenHandler tokenHandler;
+
+    @Autowired
+    JwtTokenUtil jwtTokenUtil;
 
     private final Bucket bucket;
 

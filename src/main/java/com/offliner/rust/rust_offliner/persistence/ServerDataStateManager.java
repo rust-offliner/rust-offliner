@@ -5,12 +5,16 @@ import com.offliner.rust.rust_offliner.datamodel.converters.ServerDTOConverter;
 import com.offliner.rust.rust_offliner.exceptions.KeyAlreadyExistsException;
 import com.offliner.rust.rust_offliner.exceptions.ServerNotTrackedException;
 import com.offliner.rust.rust_offliner.interfaces.IServerDao;
+import com.offliner.rust.rust_offliner.interfaces.IUserDao;
 import com.offliner.rust.rust_offliner.persistence.datamodel.ServerEntity;
+import com.offliner.rust.rust_offliner.persistence.datamodel.UserEntity;
 import com.offliner.rust.rust_offliner.state.TrackableServer;
 import com.offliner.rust.rust_offliner.state.TrackingState;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,6 +29,8 @@ public class ServerDataStateManager {
 //    @Autowired
     IServerDao serverDao;
 
+    IUserDao userDao;
+
     ServerDTOConverter converter;
 
 //
@@ -35,9 +41,10 @@ public class ServerDataStateManager {
 //    @Autowired
     Object lock;
 
-    public ServerDataStateManager(IServerDao serverDao, TrackingState state, @Qualifier("lock") Object lock, ServerDTOConverter converter) {
+    public ServerDataStateManager(IServerDao serverDao, IUserDao userDao, TrackingState state, @Qualifier("lock") Object lock, ServerDTOConverter converter) {
         this.serverDao = serverDao;
         this.state = state;
+        this.userDao = userDao;
         this.lock = lock;
         this.converter = converter;
     }
@@ -50,6 +57,7 @@ public class ServerDataStateManager {
 //            log.info(String.valueOf(b));
 //        }
         serverDao.initTrackedState();
+        serverDao.clearServersToUsersTable();
     }
 
     public long getCurrentlyTrackedServer() throws ServerNotTrackedException {
@@ -88,11 +96,13 @@ public class ServerDataStateManager {
         EServerDto server = state.add(id);
         log.debug("after adding to state");
         ServerEntity serverEntity = converter.convert(server);
-        if (serverDao.existsByServerId(id)) {
-            serverDao.updateTrackedState(id, true);
-            return;
+        if (!serverDao.existsByServerId(id)) {
+//            serverDao.updateTrackedState(id, true);
+            serverEntity.setTracked(true);
+//            return;
         }
-        serverEntity.setTracked(true);
+        // user who made the request
+        serverEntity.addUser(getUserEntity());
         serverDao.save(serverEntity);
     }
 //
@@ -121,5 +131,11 @@ public class ServerDataStateManager {
 
     public Iterator<TrackableServer> getIterator() {
         return state.getIterator();
+    }
+
+    private UserEntity getUserEntity() {
+        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        String username = user.getUsername();
+        return userDao.findByUsername(username);
     }
 }

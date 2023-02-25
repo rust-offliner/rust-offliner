@@ -99,32 +99,12 @@ public class TrackingState {
         synchronized (lock) {
             if (contains(idWrapper)) {
                 TrackableServer server = list.get(indexOf(idWrapper));
-//                TrackableServer replace = new TrackableServer(id);
-//                replace.setData(server);
-//                replace.setCount();
                 server.setCount(server.getCount() + 1);
                 server.setLastRequested(Instant.now());
                 throw new KeyAlreadyExistsException("The key you are trying to put already exists");
             }
             list.add(new TrackableServer(id, serverDto, 1, Instant.now()));
-//                if (state.containsKey(id)) {
-//                    cod.increment(id);
-////                    int index = order.indexOf(id);
-////                    int currentSubscribers = count.get(index);
-////                    eachServerSubscribersCount.replace(id, currentSubscribers + 1);
-////                    count.set(index, currentSubscribers + 1);
-//                    throw new KeyAlreadyExistsException("The key you are trying to put already exists");
-//                }
-//                state.put(id, server);
-////        order.add(id);
-////            order.add(id);
-////            count.add(1);
-//            cod.add(id);
-//                eachServerSubscribersCount.put(id, 1);
-//        mapSize++;
-
         }
-
     }
 
     public TrackableServer getById(long id) throws ServerNotTrackedException {
