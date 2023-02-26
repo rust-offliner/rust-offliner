@@ -32,15 +32,6 @@ public class TrackingStateTest {
     }
 
     @Test
-    void addingSameIdToListWhichAlreadyContainsItThrowsException() throws KeyAlreadyExistsException {
-        long id = 123;
-        assertThrows(KeyAlreadyExistsException.class, () -> {
-            state.add(id);
-            state.add(id);
-        });
-    }
-
-    @Test
     void getFromAnEmptyListThrowsException() {
         long id = 123;
         assertThrows(ServerNotTrackedException.class, () -> {

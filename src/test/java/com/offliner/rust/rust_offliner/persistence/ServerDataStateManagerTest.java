@@ -46,10 +46,8 @@ public class ServerDataStateManagerTest {
         long id = 123;
         EServerDto serverDto = new EServerDto(id);
         manager.manage(id, serverDto);
-//        assertEquals(state.getById(id).getCount(), 1);
-        assertThrows(KeyAlreadyExistsException.class, () -> {
-            manager.manage(id, serverDto);
-        });
+        assertEquals(state.getById(id).getCount(), 1);
+        manager.manage(id, serverDto);
         assertEquals(state.getById(id).getCount(), 2);
     }
 

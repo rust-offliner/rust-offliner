@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import java.util.Iterator;
+import java.util.Optional;
 
 @Service
 public class ServerDataStateManager {
@@ -91,18 +92,26 @@ public class ServerDataStateManager {
 //    @Autowired
 //    AtomicLong counter;
 
+    @Transactional
     public void add(long id) throws KeyAlreadyExistsException {
         log.debug("w managerze na poczattku");
         EServerDto server = state.add(id);
         log.debug("after adding to state");
         ServerEntity serverEntity = converter.convert(server);
-        if (!serverDao.existsByServerId(id)) {
-//            serverDao.updateTrackedState(id, true);
-            serverEntity.setTracked(true);
-//            return;
+        Optional<ServerEntity> help = serverDao.findByServerId(id);
+        UserEntity user = getUserEntity();
+        log.debug("user " + user.getUsername() + " started following server id " + id);
+
+        // lazy load users who already track the server
+        if (help.isPresent()) {
+            help.get().getUsers().forEach(serverEntity::addUser);
+            // user is already present as following this server
+            if (!serverEntity.addUser(user))
+                throw new KeyAlreadyExistsException("You can't follow a server you are already following!");
+        } else {
+            serverEntity.addUser(user);
         }
-        // user who made the request
-        serverEntity.addUser(getUserEntity());
+        serverEntity.setTracked(true);
         serverDao.save(serverEntity);
     }
 //
