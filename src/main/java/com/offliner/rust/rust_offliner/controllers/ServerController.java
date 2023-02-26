@@ -71,18 +71,18 @@ public class ServerController {
 //     */
     @PostMapping("/follow/{id}")
     public ResponseEntity<TokenizedResponse<?>> followServer(
-            @PathVariable long id, @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization) {
+            @PathVariable long id, @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization) throws KeyAlreadyExistsException {
         if (bucket.tryConsume(1)) {
             String newToken = tokenHandler.handle(authorization);
-            try {
+//            try {
                 manager.add(id);
                 return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentServletMapping().path("/api/{id}").buildAndExpand(id).toUri())
                         .header("X-Rate-Limit-Remaining", String.valueOf(bucket.getAvailableTokens()))
                         .build();
-            } catch (KeyAlreadyExistsException e) {
-                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new TokenizedResponse<>(newToken, bucket.getAvailableTokens(), e.getMessage()));
+//            } catch (KeyAlreadyExistsException e) {
+//                return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(new TokenizedResponse<>(newToken, bucket.getAvailableTokens(), e.getMessage()));
             }
-        }
+//        }
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
     }
 
