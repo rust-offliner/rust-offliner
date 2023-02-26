@@ -1,6 +1,5 @@
-package com.offliner.rust.rust_offliner.controllers;
+package com.offliner.rust.rust_offliner.exceptions.controllers;
 
-import com.offliner.rust.rust_offliner.exceptions.ExceptionDto;
 import com.offliner.rust.rust_offliner.exceptions.KeyAlreadyExistsException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -17,11 +16,12 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
     public ResponseEntity<Object> handleServerAlreadyExistsException(
             Exception e, WebRequest request
     ) {
+        HttpStatus status = HttpStatus.NOT_ACCEPTABLE;
         return handleExceptionInternal(
                 e,
-                new ExceptionDto(HttpStatus.NOT_ACCEPTABLE.value(), "You can't follow a server you are already following"),
+                new ExceptionDto(status.value(), "You can't follow a server you are already following"),
                 new HttpHeaders(),
-                HttpStatus.NOT_ACCEPTABLE,
+                status,
                 request);
     }
 }
