@@ -1,11 +1,20 @@
 package com.offliner.rust.rust_offliner.persistence.datamodel;
 
+import lombok.extern.slf4j.Slf4j;
+
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.*;
 
 @Entity
 @Table(name = "server")
+@Slf4j
+@NamedEntityGraphs({
+        @NamedEntityGraph(
+            name = "Server.users",
+                attributeNodes = { @NamedAttributeNode("users") }
+        )
+})
 public class ServerEntity {
 
     @Id
@@ -65,9 +74,13 @@ public class ServerEntity {
 
     }
 
-    public void addUser(UserEntity user) {
+    public boolean addUser(UserEntity user) {
         this.users.add(user);
-        user.getServers().add(this);
+        return user.getServers().add(this);
+    }
+
+    public Set<UserEntity> getUsers() {
+        return users;
     }
 
     public void removeUser(UserEntity user) {
@@ -164,6 +177,6 @@ public class ServerEntity {
 
     @Override
     public int hashCode() {
-        return Objects.hash(serverId, wipeDate, map, addressIp, port, tracked, users, followedPlayersList);
+        return Objects.hash(serverId, tracked);
     }
 }

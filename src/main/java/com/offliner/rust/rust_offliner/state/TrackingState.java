@@ -75,19 +75,8 @@ public class TrackingState {
 
     public EServerDto add(long id) throws KeyAlreadyExistsException {
         log.debug("rozpoczynamy dodawnaie do listy");
-        Long idWrapper = id;
         TrackableServer server = new TrackableServer(id, new EServerDto(id), 1, Instant.now());
         synchronized (lock) {
-//            if (state.containsKey(id)) {
-//                throw new KeyAlreadyExistsException("The key you are trying to put already exists");
-//            }
-//            // we don't have state of this server yet
-//            state.put(id, null);
-//
-//            cod.add(id);
-            if (contains(idWrapper)) {
-                throw new KeyAlreadyExistsException("The key you are trying to put already exists");
-            }
             list.add(server);
             log.debug("item has been added to list");
         }
@@ -101,7 +90,6 @@ public class TrackingState {
                 TrackableServer server = list.get(indexOf(idWrapper));
                 server.setCount(server.getCount() + 1);
                 server.setLastRequested(Instant.now());
-                throw new KeyAlreadyExistsException("The key you are trying to put already exists");
             }
             list.add(new TrackableServer(id, serverDto, 1, Instant.now()));
         }
@@ -138,14 +126,10 @@ public class TrackingState {
             if (!contains(idWrapper)) {
                 throw new ServerNotTrackedException("Server " + id + " is not tracked");
             }
-//            int position = ;
             TrackableServer server = list.get(indexOf(idWrapper));
             log.debug("dane serwera " + server);
             server.setData(serverDto);
             server.setLastRequested(Instant.now());
-//            server.setCount(server.getCount() + 1);
-//            state.replace(id, server);
-//            list.set()
         }
     }
 
