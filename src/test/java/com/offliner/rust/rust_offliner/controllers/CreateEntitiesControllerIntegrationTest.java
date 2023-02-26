@@ -30,9 +30,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @TestPropertySource(locations = "/application-test.properties")
-public class ServerRestControllerIntegrationTest {
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+public class CreateEntitiesControllerIntegrationTest {
 
-    private static final Logger log = LoggerFactory.getLogger(ServerRestControllerIntegrationTest.class);
+    private static final Logger log = LoggerFactory.getLogger(CreateEntitiesControllerIntegrationTest.class);
 
     @Autowired
     private MockMvc mockMvc;
@@ -267,6 +268,62 @@ public class ServerRestControllerIntegrationTest {
                 .andExpect(status().isNotAcceptable())
                 .andExpect(jsonPath("$.status").value(406))
                 .andExpect(jsonPath("$.message").value("You can't follow a server you are already following"))
+                .andReturn();
+    }
+
+    // this has to be tested first because we check bucket usage for unused controller
+    @Test
+    @Order(1)
+    void bucketIsCorrectlyResolved() throws Exception {
+        JwtRequest secondUserCredentials = new JwtRequest("karczuchowski", "123");
+        MvcResult result = mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .post("/auth")
+                                .content(asJsonString(secondUserCredentials))
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON)
+                )
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.jwtToken").exists())
+                .andExpect(jsonPath("$.jwtToken").isString())
+                .andReturn();
+        String responseAsString = result.getResponse().getContentAsString();
+        JwtResponse response = new ObjectMapper().readValue(responseAsString, JwtResponse.class);
+        String secondUserAuthorization = "Bearer " + response.jwtToken();
+        long id = 123;
+        mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .post("/api/follow/{id}", id)
+                                .header("Authorization", authorization)
+                )
+                .andExpect(status().isCreated())
+                .andExpect(header().exists("X-Rate-Limit-Remaining"))
+                .andExpect(header().string("X-Rate-Limit-Remaining", "9"))
+                .andExpect(header().exists("Location"))
+                .andExpect(header().string("Location", "http://localhost/api/" + id))
+                .andReturn();
+        mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .post("/api/follow/{id}", id)
+                                .header("Authorization", secondUserAuthorization)
+                )
+                .andExpect(status().isCreated())
+                .andExpect(header().exists("X-Rate-Limit-Remaining"))
+                .andExpect(header().string("X-Rate-Limit-Remaining", "9"))
+                .andExpect(header().exists("Location"))
+                .andExpect(header().string("Location", "http://localhost/api/" + id))
+                .andReturn();
+        mockMvc.perform(
+                        MockMvcRequestBuilders
+                                .post("/api/follow/{id}", id)
+                                .header("Authorization", authorization)
+                )
+                .andExpect(status().isNotAcceptable())
+                .andExpect(jsonPath("$.status").value(406))
+                .andExpect(jsonPath("$.message").value("You can't follow a server you are already following"))
+                .andExpect(header().exists("X-Rate-Limit-Remaining"))
+                .andExpect(header().string("X-Rate-Limit-Remaining", "8"))
                 .andReturn();
     }
 
