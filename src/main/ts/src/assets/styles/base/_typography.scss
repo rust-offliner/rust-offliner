@@ -1,10 +1,12 @@
-/**
- * Basic typography style for copy text
- */
-@use "../abstracts/" as *;
+@use '../abstracts/' as *;
+
+:root {
+  font-size: 10px;
+}
 
 body {
-  color: $text-color;
-  font-size: 1.6rem;
+  color: $color-white;
+  font-size: 1.8rem;
+  font-weight: 700;
   font-family: $text-font-stack;
 }

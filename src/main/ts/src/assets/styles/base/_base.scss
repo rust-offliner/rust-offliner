@@ -1,8 +1,11 @@
-// -----------------------------------------------------------------------------
-// This file contains very basic styles.
-// -----------------------------------------------------------------------------
+@use '../abstracts/' as *;
 
-@use "../abstracts/" as *;
+.leaflet-control-layers.leaflet-control {
+  background-color: fade-out($color-dim-gray, 0.25);
+  color: currentColor;
+  font-size: 1rem;
+  border: none;
+}
 
 //reset
 /*
@@ -57,7 +60,5 @@ h6 {
 
 #root {
   height: 100%;
-  display: grid;
-  grid-template-rows: auto 1fr;
   isolation: isolate;
 }

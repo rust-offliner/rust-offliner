@@ -1,0 +1,30 @@
+@use '../../../../assets/styles/abstracts/' as *;
+
+.zoomControl {
+  position: absolute;
+  inset: 50% 1rem 50% auto;
+  margin-block: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+  z-index: 500;
+
+  > button {
+    color: $color-white;
+    font-size: 3rem;
+    padding: 1rem;
+    border: none;
+    background-color: fade-out($color-dim-gray, 0.25);
+    -webkit-backdrop-filter: blur(0.2rem);
+    backdrop-filter: blur(0.2rem);
+
+    &:hover {
+      background-color: fade-out(lighten($color-dim-gray, 10%), 0.25);
+    }
+
+    &:focus-visible {
+      outline: solid $color-primary;
+    }
+  }
+}
