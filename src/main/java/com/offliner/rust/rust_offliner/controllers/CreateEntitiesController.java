@@ -1,7 +1,9 @@
 package com.offliner.rust.rust_offliner.controllers;
 
 import com.offliner.rust.rust_offliner.datamodel.TokenizedResponse;
-import com.offliner.rust.rust_offliner.exceptions.KeyAlreadyExistsException;
+import com.offliner.rust.rust_offliner.exceptions.*;
+import com.offliner.rust.rust_offliner.maps.MapImage;
+import com.offliner.rust.rust_offliner.maps.MapManager;
 import com.offliner.rust.rust_offliner.persistence.ServerDataStateManager;
 import com.offliner.rust.rust_offliner.security.JwtTokenUtil;
 import com.offliner.rust.rust_offliner.security.TokenHandler;
@@ -18,7 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @RestController
-@RequestMapping("/api/follow")
+@RequestMapping("/api/create")
 @Slf4j
 public class CreateEntitiesController {
 
@@ -32,14 +34,22 @@ public class CreateEntitiesController {
 
     BucketAssignmentService service;
 
+    MapManager mapManager;
+
     private Bucket bucket;
 
-    public CreateEntitiesController(EServerService serverService, ServerDataStateManager manager, TokenHandler tokenHandler, JwtTokenUtil jwtTokenUtil, BucketAssignmentService service) {
+    public CreateEntitiesController(EServerService serverService,
+                                    ServerDataStateManager manager,
+                                    TokenHandler tokenHandler,
+                                    JwtTokenUtil jwtTokenUtil,
+                                    BucketAssignmentService service,
+                                    MapManager mapManager) {
         this.serverService = serverService;
         this.manager = manager;
         this.tokenHandler = tokenHandler;
         this.jwtTokenUtil = jwtTokenUtil;
         this.service = service;
+        this.mapManager = mapManager;
 //        bucket = service.resolveBucket();
     }
 
@@ -74,7 +84,7 @@ public class CreateEntitiesController {
 //        INSERT INTO `maps` ...
 //     */
     @PostMapping("/{id}")
-    public ResponseEntity<TokenizedResponse<?>> followServer(
+    public ResponseEntity<?> followServer(
             @PathVariable long id, @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization) throws KeyAlreadyExistsException {
         bucket = service.resolveBucket(getUsername());
         if (bucket.tryConsume(1)) {
@@ -86,6 +96,24 @@ public class CreateEntitiesController {
                     .build();
         }
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+    }
+
+    @PostMapping("/map/{id}")
+    public ResponseEntity<?> addMap(
+            @PathVariable long id, @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization, @RequestBody String imageB64) throws ResolutionTooSmallException, ImageNotSquareException, MapStringIsNotValidBase64Exception, UnprocessableMapImageException, ImageExtensionNotSupportedException {
+        bucket = service.resolveBucket(getUsername());
+        if (bucket.tryConsume(1)) {
+            String newToken = tokenHandler.handle(authorization);
+            log.info(imageB64);
+            MapImage image = new MapImage(id, imageB64);
+            mapManager.saveImage(id, image);
+            return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentServletMapping().path("/api/{id}").buildAndExpand(id).toUri())
+                    .header("X-Rate-Limit-Remaining", String.valueOf(bucket.getAvailableTokens()))
+                    .header("X-Api-Key", newToken)
+                    .build();
+        }
+
+        return null;
     }
 
     private String getUsername() {

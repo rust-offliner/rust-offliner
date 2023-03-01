@@ -87,7 +87,7 @@ public class CreateEntitiesControllerIntegrationTest {
         //TODO CHANGE
         mockMvc.perform(
                 MockMvcRequestBuilders
-                        .post("/api/follow/{id}", id)
+                        .post("/api/create/{id}", id)
                         .header("Authorization", authorization)
         )
                 .andExpect(status().isCreated())
@@ -105,7 +105,7 @@ public class CreateEntitiesControllerIntegrationTest {
         // make server followed before actual test
         mockMvc.perform(
                         MockMvcRequestBuilders
-                                .post("/api/follow/{id}", id)
+                                .post("/api/create/{id}", id)
                                 .header("Authorization", authorization)
                 )
 //                .andExpect(status().isCreated())
@@ -118,7 +118,7 @@ public class CreateEntitiesControllerIntegrationTest {
         // second call to already tracked server
         mockMvc.perform(
                         MockMvcRequestBuilders
-                                .post("/api/follow/{id}", id)
+                                .post("/api/create/{id}", id)
                                 .header("Authorization", authorization)
                 )
                 .andExpect(status().isNotAcceptable())
@@ -130,7 +130,7 @@ public class CreateEntitiesControllerIntegrationTest {
         long id = 123;
         mockMvc.perform(
                         MockMvcRequestBuilders
-                                .post("/api/follow/{id}", id)
+                                .post("/api/create/{id}", id)
                 )
                 .andExpect(status().isUnauthorized())
                 .andReturn();
@@ -142,7 +142,7 @@ public class CreateEntitiesControllerIntegrationTest {
         UserEntity user = userDao.findByUsername(username);
         mockMvc.perform(
                         MockMvcRequestBuilders
-                                .post("/api/follow/{id}", id)
+                                .post("/api/create/{id}", id)
                                 .header("Authorization", authorization)
                 )
                 .andExpect(status().isCreated())
@@ -160,7 +160,7 @@ public class CreateEntitiesControllerIntegrationTest {
         long id = 123;
         mockMvc.perform(
                 MockMvcRequestBuilders
-                        .post("/api/follow/{id}", id)
+                        .post("/api/create/{id}", id)
                         .header("Authorization", authorization)
         )
                 .andExpect(status().isCreated())
@@ -170,7 +170,7 @@ public class CreateEntitiesControllerIntegrationTest {
                 .andReturn();
         mockMvc.perform(
                 MockMvcRequestBuilders
-                        .post("/api/follow/{id}", id)
+                        .post("/api/create/{id}", id)
                         .header("Authorization", authorization)
         )
                 .andExpect(status().isNotAcceptable())
@@ -200,7 +200,7 @@ public class CreateEntitiesControllerIntegrationTest {
         long id = 123;
         mockMvc.perform(
                         MockMvcRequestBuilders
-                                .post("/api/follow/{id}", id)
+                                .post("/api/create/{id}", id)
                                 .header("Authorization", authorization)
                 )
                 .andExpect(status().isCreated())
@@ -210,7 +210,7 @@ public class CreateEntitiesControllerIntegrationTest {
                 .andReturn();
         mockMvc.perform(
                         MockMvcRequestBuilders
-                                .post("/api/follow/{id}", id)
+                                .post("/api/create/{id}", id)
                                 .header("Authorization", secondUserAuthorization)
                 )
                 .andExpect(status().isCreated())
@@ -242,7 +242,7 @@ public class CreateEntitiesControllerIntegrationTest {
         long id = 123;
         mockMvc.perform(
                         MockMvcRequestBuilders
-                                .post("/api/follow/{id}", id)
+                                .post("/api/create/{id}", id)
                                 .header("Authorization", authorization)
                 )
                 .andExpect(status().isCreated())
@@ -252,7 +252,7 @@ public class CreateEntitiesControllerIntegrationTest {
                 .andReturn();
         mockMvc.perform(
                         MockMvcRequestBuilders
-                                .post("/api/follow/{id}", id)
+                                .post("/api/create/{id}", id)
                                 .header("Authorization", secondUserAuthorization)
                 )
                 .andExpect(status().isCreated())
@@ -262,7 +262,7 @@ public class CreateEntitiesControllerIntegrationTest {
                 .andReturn();
         mockMvc.perform(
                         MockMvcRequestBuilders
-                                .post("/api/follow/{id}", id)
+                                .post("/api/create/{id}", id)
                                 .header("Authorization", authorization)
                 )
                 .andExpect(status().isNotAcceptable())
@@ -294,7 +294,7 @@ public class CreateEntitiesControllerIntegrationTest {
         long id = 123;
         mockMvc.perform(
                         MockMvcRequestBuilders
-                                .post("/api/follow/{id}", id)
+                                .post("/api/create/{id}", id)
                                 .header("Authorization", authorization)
                 )
                 .andExpect(status().isCreated())
@@ -305,7 +305,7 @@ public class CreateEntitiesControllerIntegrationTest {
                 .andReturn();
         mockMvc.perform(
                         MockMvcRequestBuilders
-                                .post("/api/follow/{id}", id)
+                                .post("/api/create/{id}", id)
                                 .header("Authorization", secondUserAuthorization)
                 )
                 .andExpect(status().isCreated())
@@ -316,7 +316,7 @@ public class CreateEntitiesControllerIntegrationTest {
                 .andReturn();
         mockMvc.perform(
                         MockMvcRequestBuilders
-                                .post("/api/follow/{id}", id)
+                                .post("/api/create/{id}", id)
                                 .header("Authorization", authorization)
                 )
                 .andExpect(status().isNotAcceptable())
