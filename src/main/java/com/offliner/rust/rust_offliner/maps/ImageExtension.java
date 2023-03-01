@@ -5,7 +5,7 @@ import com.offliner.rust.rust_offliner.exceptions.ImageExtensionNotSupportedExce
 public enum ImageExtension {
     PNG, JPEG, UNKNOWN;
 
-    public String getExtension() throws ImageExtensionNotSupportedException {
+    public String value() throws ImageExtensionNotSupportedException {
         return switch (this) {
             case PNG -> ".png";
             case JPEG -> ".jpg";
