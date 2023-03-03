@@ -65,6 +65,17 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
         return getObjectResponseEntity(e, request, "You poorly cropped the image - image must be square (or almost square)");
     }
 
+    @ExceptionHandler(value = { PrecedentEntityNotExistsException.class })
+    public ResponseEntity<Object> precedentEntityNotExists(
+            PrecedentEntityNotExistsException e,
+            WebRequest request
+    ) {
+        return switch (e.getType()) {
+            case SERVER -> getObjectResponseEntity(e, request, "Server for which you are trying to upload the map doesn't exists");
+            case MAP -> getObjectResponseEntity(e, request, "Map for which you are trying to upload the base doesn't exists");
+        };
+    }
+
     @NotNull
     private ResponseEntity<Object> getObjectResponseEntity(Exception e, WebRequest request, String message) {
         String username = getUsername();
