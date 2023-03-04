@@ -1,73 +1,69 @@
 package com.offliner.rust.rust_offliner.maps;
 
 import com.offliner.rust.rust_offliner.exceptions.ImageExtensionNotSupportedException;
+import com.offliner.rust.rust_offliner.exceptions.MapSizeInvalidException;
+import com.offliner.rust.rust_offliner.exceptions.PrecedentEntityNotExistsException;
 import com.offliner.rust.rust_offliner.exceptions.UnprocessableMapImageException;
+import com.offliner.rust.rust_offliner.interfaces.IMapDao;
+import com.offliner.rust.rust_offliner.interfaces.IServerDao;
+import com.offliner.rust.rust_offliner.persistence.datamodel.MapEntity;
+import com.offliner.rust.rust_offliner.persistence.datamodel.ServerEntity;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.time.Instant;
+import java.util.Optional;
 
 @Service
 @Slf4j
 public class MapManager {
 
-    public MapManager() {
+    MapFileWriter writer;
+
+    IMapDao mapDao;
+
+    IServerDao serverDao;
+
+    public MapManager(MapFileWriter writer, IMapDao mapDao, IServerDao serverDao) {
+        this.writer = writer;
+        this.mapDao = mapDao;
+        this.serverDao = serverDao;
     }
 
-    public MapManager(String systemPath, Environment env) {
-        this.systemPath = systemPath;
-        this.env = env;
+    // this function is for "scrapped" maps from RustMaps or directly from server owner
+    // this should not be used in controller
+    public void save(long id, MapImage image, int size) throws UnprocessableMapImageException, ImageExtensionNotSupportedException, PrecedentEntityNotExistsException, MapSizeInvalidException {
+        if (!checkMapSize(size))
+            throw new MapSizeInvalidException();
+        Optional<ServerEntity> serverEntity = serverDao.findByServerId(id);
+        if (serverEntity.isEmpty())
+            throw new PrecedentEntityNotExistsException(PrecedentEntityNotExistsException.Types.SERVER);
+        String path = writer.saveImage(id, image);
+        MapEntity map = new MapEntity();
+        map.setServer(serverEntity.get());
+        map.setSize(size);
+        map.setImagePath(path);
+        mapDao.save(map);
     }
 
-    @Autowired
-    Environment env;
-
-    String systemPath;
-
-    public void saveImage(long id, MapImage mapImage) throws UnprocessableMapImageException, ImageExtensionNotSupportedException {
-        byte[] imageByte = mapImage.getImageBytes();
-        String path = systemPath + id + getExtension(imageByte).value();
-        log.info(path);
-        log.info(systemPath);
-        File image = new File(path);
-        try {
-            // we need to create an empty file before actually making it an image
-            image.createNewFile();
-            FileOutputStream stream = new FileOutputStream(image);
-            stream.write(imageByte);
-            stream.close();
-        } catch (Exception e) {
-            throw new UnprocessableMapImageException();
-        }
-
+    // this function is for maps directly uploaded by the user
+    public void save(long id, MapImage image) throws UnprocessableMapImageException, ImageExtensionNotSupportedException, PrecedentEntityNotExistsException {
+        Optional<ServerEntity> serverEntity = serverDao.findByServerId(id);
+        if (serverEntity.isEmpty())
+            throw new PrecedentEntityNotExistsException(PrecedentEntityNotExistsException.Types.SERVER);
+        String path = writer.saveImage(id, image);
+        MapEntity map = new MapEntity();
+        map.setServer(serverEntity.get());
+        map.setImagePath(path);
+        map.setTime(Instant.now());
+        mapDao.save(map);
     }
 
-    private ImageExtension getExtension(byte[] imageBytes) {
-        return ImageFormatResolver.resolve(imageBytes);
+    // map is size [1000;6000] with step 50
+    private boolean checkMapSize(int size) {
+        if (size <= 1000 || size >= 6000)
+            return false;
+        return size % 50 == 0;
     }
-
-    @PostConstruct
-    private void setSystemPath() {
-        if (System.getProperty("os.name").startsWith("Windows")) {
-            systemPath = env.getProperty("image.path.windows");
-        } else {
-        systemPath = env.getProperty("image.path.linux");
-        }
-        try {
-            Files.createDirectories(Paths.get(systemPath));
-        } catch (IOException e) {
-            log.error("Path for images cannot be created");
-            throw new RuntimeException(e);
-        }
-    }
-
 
 }
