@@ -24,9 +24,10 @@ public class ServerEntity {
     @Column(name = "wipe_date")
     private LocalDateTime wipeDate;
 
-    @OneToOne
-    @JoinColumn(name = "server_id", referencedColumnName = "server_id")
-    private MapEntity map;
+//    @OneToOne
+//    @JoinColumn(name = "server_id", referencedColumnName = "server_id")
+    @OneToMany(mappedBy = "server")
+    private List<MapEntity> map;
 
     @Column(name = "ip_address")
     private String addressIp;
@@ -53,7 +54,7 @@ public class ServerEntity {
     @OneToMany(mappedBy = "server")
     private List<PlayerEntity> followedPlayersList;
 
-    public ServerEntity(long serverId, LocalDateTime wipeDate, MapEntity map, String addressIp, int port, List<PlayerEntity> playersList) {
+    public ServerEntity(long serverId, LocalDateTime wipeDate, List<MapEntity> map, String addressIp, int port, List<PlayerEntity> playersList) {
         this.serverId = serverId;
         this.wipeDate = wipeDate;
         this.map = map;
@@ -108,9 +109,16 @@ public class ServerEntity {
         this.wipeDate = wipeDate;
     }
 
-    public MapEntity getMap() {
+    public List<MapEntity> getMaps() {
+        map.sort(new TimeComparator());
         return map;
     }
+
+//    public MapEntity getCurrentMap() {
+//        List<MapEntity> sorted = getMaps();
+//        sorted.sort(new TimeComparator());
+//        return sorted.get(sorted.size() - 1);
+//    }
 
     public void setAddressIp(String addressIp) {
         this.addressIp = addressIp;
@@ -121,7 +129,11 @@ public class ServerEntity {
     }
 
     public void setMap(MapEntity map) {
-        this.map = map;
+//        getMaps().size();
+//        if (!this.map.contains(map))
+//            this.map.add(map);
+        this.map = new ArrayList<>();
+        this.map.add(map);
     }
 
     public String getIPAddress() {
@@ -178,5 +190,12 @@ public class ServerEntity {
     @Override
     public int hashCode() {
         return Objects.hash(serverId, tracked);
+    }
+
+    static class TimeComparator implements Comparator<MapEntity> {
+        @Override
+        public int compare(MapEntity o1, MapEntity o2) {
+            return o1.getTime().compareTo(o2.getTime());
+        }
     }
 }
