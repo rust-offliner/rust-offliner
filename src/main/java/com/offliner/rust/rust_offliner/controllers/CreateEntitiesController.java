@@ -1,6 +1,5 @@
 package com.offliner.rust.rust_offliner.controllers;
 
-import com.offliner.rust.rust_offliner.datamodel.TokenizedResponse;
 import com.offliner.rust.rust_offliner.exceptions.*;
 import com.offliner.rust.rust_offliner.maps.MapImage;
 import com.offliner.rust.rust_offliner.maps.MapManager;
@@ -100,13 +99,13 @@ public class CreateEntitiesController {
 
     @PostMapping("/map/{id}")
     public ResponseEntity<?> addMap(
-            @PathVariable long id, @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization, @RequestBody String imageB64) throws ResolutionTooSmallException, ImageNotSquareException, MapStringIsNotValidBase64Exception, UnprocessableMapImageException, ImageExtensionNotSupportedException {
+            @PathVariable long id, @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization, @RequestBody String imageB64) throws ResolutionTooSmallException, ImageNotSquareException, MapStringIsNotValidBase64Exception, UnprocessableMapImageException, ImageExtensionNotSupportedException, PrecedentEntityNotExistsException {
         bucket = service.resolveBucket(getUsername());
         if (bucket.tryConsume(1)) {
             String newToken = tokenHandler.handle(authorization);
             log.info(imageB64);
             MapImage image = new MapImage(id, imageB64);
-            mapManager.saveImage(id, image);
+            mapManager.save(id, image);
             return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentServletMapping().path("/api/{id}").buildAndExpand(id).toUri())
                     .header("X-Rate-Limit-Remaining", String.valueOf(bucket.getAvailableTokens()))
                     .header("X-Api-Key", newToken)

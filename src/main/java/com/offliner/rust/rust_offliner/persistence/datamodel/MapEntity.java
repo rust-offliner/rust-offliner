@@ -2,6 +2,8 @@ package com.offliner.rust.rust_offliner.persistence.datamodel;
 
 import javax.persistence.*;
 import java.io.File;
+import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
@@ -9,6 +11,7 @@ import java.util.List;
 public class MapEntity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "map_id")
     private long id;
 
@@ -18,9 +21,11 @@ public class MapEntity {
     @Column(name = "image_path")
     private String imagePath;
 
+    @Column(name = "time")
+    private Instant time;
 
-    @OneToOne
-    @JoinColumn(name = "server_id", referencedColumnName = "server_id")
+    @ManyToOne
+    @JoinColumn(name = "server_id")
     private ServerEntity server;
 
     @OneToMany(mappedBy = "map")
@@ -55,5 +60,29 @@ public class MapEntity {
 
     public File getImage() {
         return new File(this.imagePath);
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setSize(int size) {
+        this.size = size;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
+    public void setBaseList(List<BaseEntity> baseList) {
+        this.baseList = baseList;
+    }
+
+    public Instant getTime() {
+        return time;
+    }
+
+    public void setTime(Instant time) {
+        this.time = time;
     }
 }
