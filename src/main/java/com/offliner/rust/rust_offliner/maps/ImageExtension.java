@@ -1,6 +1,6 @@
 package com.offliner.rust.rust_offliner.maps;
 
-import com.offliner.rust.rust_offliner.exceptions.ImageExtensionNotSupportedException;
+import com.offliner.rust.rust_offliner.exceptions.maps.ImageExtensionNotSupportedException;
 
 public enum ImageExtension {
     PNG, JPEG, UNKNOWN;

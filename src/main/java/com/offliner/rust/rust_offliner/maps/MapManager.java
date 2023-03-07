@@ -1,9 +1,9 @@
 package com.offliner.rust.rust_offliner.maps;
 
-import com.offliner.rust.rust_offliner.exceptions.ImageExtensionNotSupportedException;
-import com.offliner.rust.rust_offliner.exceptions.MapSizeInvalidException;
+import com.offliner.rust.rust_offliner.exceptions.maps.ImageExtensionNotSupportedException;
+import com.offliner.rust.rust_offliner.exceptions.maps.MapSizeInvalidException;
 import com.offliner.rust.rust_offliner.exceptions.PrecedentEntityNotExistsException;
-import com.offliner.rust.rust_offliner.exceptions.UnprocessableMapImageException;
+import com.offliner.rust.rust_offliner.exceptions.maps.UnprocessableMapImageException;
 import com.offliner.rust.rust_offliner.interfaces.IMapDao;
 import com.offliner.rust.rust_offliner.interfaces.IServerDao;
 import com.offliner.rust.rust_offliner.persistence.datamodel.MapEntity;

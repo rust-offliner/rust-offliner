@@ -1,6 +1,6 @@
 package com.offliner.rust.rust_offliner.maps;
 
-import com.offliner.rust.rust_offliner.exceptions.ImageNotSquareException;
+import com.offliner.rust.rust_offliner.exceptions.maps.ImageNotSquareException;
 import com.offliner.rust.rust_offliner.exceptions.MapStringIsNotValidBase64Exception;
 import com.offliner.rust.rust_offliner.exceptions.ResolutionTooSmallException;
 import lombok.Getter;

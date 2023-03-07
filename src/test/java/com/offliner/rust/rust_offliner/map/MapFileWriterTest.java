@@ -1,6 +1,9 @@
 package com.offliner.rust.rust_offliner.map;
 
 import com.offliner.rust.rust_offliner.exceptions.*;
+import com.offliner.rust.rust_offliner.exceptions.maps.ImageExtensionNotSupportedException;
+import com.offliner.rust.rust_offliner.exceptions.maps.ImageNotSquareException;
+import com.offliner.rust.rust_offliner.exceptions.maps.UnprocessableMapImageException;
 import com.offliner.rust.rust_offliner.maps.MapImage;
 import com.offliner.rust.rust_offliner.maps.MapFileWriter;
 import lombok.extern.slf4j.Slf4j;
