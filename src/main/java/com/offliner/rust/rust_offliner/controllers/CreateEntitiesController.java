@@ -108,7 +108,7 @@ public class CreateEntitiesController {
             String newToken = tokenHandler.handle(authorization);
             log.info(imageB64);
             MapImage image = new MapImage(id, imageB64);
-            mapManager.save(id, image);
+            mapManager.userSave(id, image);
             return ResponseEntity.created(ServletUriComponentsBuilder.fromCurrentServletMapping().path("/api/{id}").buildAndExpand(id).toUri())
                     .header("X-Rate-Limit-Remaining", String.valueOf(bucket.getAvailableTokens()))
                     .header("X-Api-Key", newToken)

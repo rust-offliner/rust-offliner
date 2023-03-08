@@ -55,7 +55,7 @@ public class MapManagerTest {
         }
         // save it
         MapImage mapImage = new MapImage(id, b64);
-        manager.save(id, mapImage);
+        manager.userSave(id, mapImage);
         // check if it is saved
         String savedB64;
         try (BufferedReader reader = new BufferedReader(new FileReader("C:\\var\\maps\\123.png"))) {

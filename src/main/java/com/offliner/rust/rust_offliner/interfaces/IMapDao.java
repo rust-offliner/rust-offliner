@@ -12,4 +12,7 @@ public interface IMapDao extends CrudRepository<MapEntity, Long> {
     @Query(value = "DELETE FROM maps WHERE server_id = :id", nativeQuery = true)
     @Modifying
     void deleteByServerId(long id);
+
+    @Query(value = "UPDATE maps SET current = false WHERE server_id = :id", nativeQuery = true)
+    void findByServerIdAndUpdateTracked(long id);
 }
