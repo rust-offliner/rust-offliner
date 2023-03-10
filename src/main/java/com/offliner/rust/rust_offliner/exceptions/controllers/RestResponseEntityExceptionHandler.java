@@ -1,6 +1,9 @@
 package com.offliner.rust.rust_offliner.exceptions.controllers;
 
 import com.offliner.rust.rust_offliner.exceptions.*;
+import com.offliner.rust.rust_offliner.exceptions.maps.ImageExtensionNotSupportedException;
+import com.offliner.rust.rust_offliner.exceptions.maps.ImageNotSquareException;
+import com.offliner.rust.rust_offliner.exceptions.maps.UnprocessableMapImageException;
 import com.offliner.rust.rust_offliner.services.BucketAssignmentService;
 import io.github.bucket4j.Bucket;
 import lombok.extern.slf4j.Slf4j;

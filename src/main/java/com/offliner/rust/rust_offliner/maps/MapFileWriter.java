@@ -1,7 +1,7 @@
 package com.offliner.rust.rust_offliner.maps;
 
-import com.offliner.rust.rust_offliner.exceptions.ImageExtensionNotSupportedException;
-import com.offliner.rust.rust_offliner.exceptions.UnprocessableMapImageException;
+import com.offliner.rust.rust_offliner.exceptions.maps.ImageExtensionNotSupportedException;
+import com.offliner.rust.rust_offliner.exceptions.maps.UnprocessableMapImageException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;

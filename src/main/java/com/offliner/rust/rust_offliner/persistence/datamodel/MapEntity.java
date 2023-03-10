@@ -24,6 +24,9 @@ public class MapEntity {
     @Column(name = "time")
     private Instant time;
 
+    @Column(name = "current")
+    private boolean current;
+
     @ManyToOne
     @JoinColumn(name = "server_id")
     private ServerEntity server;
@@ -48,6 +51,14 @@ public class MapEntity {
 
     public MapEntity() {
 
+    }
+
+    public boolean isCurrent() {
+        return current;
+    }
+
+    public void setCurrent(boolean current) {
+        this.current = current;
     }
 
     public int getSize() {

@@ -1,8 +1,8 @@
 package com.offliner.rust.rust_offliner.datamodel;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.offliner.rust.rust_offliner.exceptions.CustomMapNotSupportedException;
-import com.offliner.rust.rust_offliner.exceptions.MapNotProceduralException;
+import com.offliner.rust.rust_offliner.exceptions.maps.CustomMapNotSupportedException;
+import com.offliner.rust.rust_offliner.exceptions.maps.MapNotProceduralException;
 import com.offliner.rust.rust_offliner.persistence.datamodel.MapEntity;
 import com.offliner.rust.rust_offliner.persistence.datamodel.PlayerEntity;
 import org.jetbrains.annotations.NotNull;

@@ -1,11 +1,13 @@
 package com.offliner.rust.rust_offliner.map;
 
 import com.offliner.rust.rust_offliner.exceptions.*;
+import com.offliner.rust.rust_offliner.exceptions.maps.ImageExtensionNotSupportedException;
+import com.offliner.rust.rust_offliner.exceptions.maps.ImageNotSquareException;
+import com.offliner.rust.rust_offliner.exceptions.maps.UnprocessableMapImageException;
 import com.offliner.rust.rust_offliner.interfaces.IMapDao;
 import com.offliner.rust.rust_offliner.maps.MapImage;
 import com.offliner.rust.rust_offliner.maps.MapManager;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,7 +55,7 @@ public class MapManagerTest {
         }
         // save it
         MapImage mapImage = new MapImage(id, b64);
-        manager.save(id, mapImage);
+        manager.userSave(id, mapImage);
         // check if it is saved
         String savedB64;
         try (BufferedReader reader = new BufferedReader(new FileReader("C:\\var\\maps\\123.png"))) {
