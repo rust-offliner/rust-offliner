@@ -114,8 +114,7 @@ public class CreateEntitiesController {
                     .header("X-Api-Key", newToken)
                     .build();
         }
-
-        return null;
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
     }
 
     private String getUsername() {
