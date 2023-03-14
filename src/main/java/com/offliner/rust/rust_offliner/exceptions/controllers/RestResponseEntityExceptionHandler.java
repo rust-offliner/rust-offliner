@@ -1,6 +1,7 @@
 package com.offliner.rust.rust_offliner.exceptions.controllers;
 
 import com.offliner.rust.rust_offliner.exceptions.*;
+import com.offliner.rust.rust_offliner.exceptions.bases.CoordsOutOfBoundsException;
 import com.offliner.rust.rust_offliner.exceptions.maps.ImageExtensionNotSupportedException;
 import com.offliner.rust.rust_offliner.exceptions.maps.ImageNotSquareException;
 import com.offliner.rust.rust_offliner.exceptions.maps.UnprocessableMapImageException;
@@ -77,6 +78,13 @@ public class RestResponseEntityExceptionHandler extends ResponseEntityExceptionH
             case SERVER -> getObjectResponseEntity(e, request, "Server for which you are trying to upload the map doesn't exists");
             case MAP -> getObjectResponseEntity(e, request, "Map for which you are trying to upload the base doesn't exists");
         };
+    }
+
+    @ExceptionHandler(value = { CoordsOutOfBoundsException.class })
+    public ResponseEntity<Object> coordsOutOfBounds(
+            Exception e, WebRequest request
+    ) {
+        return getObjectResponseEntity(e, request, "Base is outside of the map");
     }
 
     @NotNull
