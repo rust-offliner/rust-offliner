@@ -1,6 +1,9 @@
 package com.offliner.rust.rust_offliner.controllers;
 
+import com.offliner.rust.rust_offliner.bases.BaseManager;
+import com.offliner.rust.rust_offliner.datamodel.BaseDto;
 import com.offliner.rust.rust_offliner.exceptions.*;
+import com.offliner.rust.rust_offliner.exceptions.bases.CoordsOutOfBoundsException;
 import com.offliner.rust.rust_offliner.exceptions.maps.ImageExtensionNotSupportedException;
 import com.offliner.rust.rust_offliner.exceptions.maps.ImageNotSquareException;
 import com.offliner.rust.rust_offliner.exceptions.maps.UnprocessableMapImageException;
@@ -40,12 +43,14 @@ public class CreateEntitiesController {
 
     private Bucket bucket;
 
+    private BaseManager baseManager;
+
     public CreateEntitiesController(EServerService serverService,
                                     ServerDataStateManager manager,
                                     TokenHandler tokenHandler,
                                     JwtTokenUtil jwtTokenUtil,
                                     BucketAssignmentService service,
-                                    MapManager mapManager) {
+                                    MapManager mapManager, BaseManager baseManager) {
         this.serverService = serverService;
         this.manager = manager;
         this.tokenHandler = tokenHandler;
@@ -53,6 +58,7 @@ public class CreateEntitiesController {
         this.service = service;
         this.mapManager = mapManager;
 //        bucket = service.resolveBucket();
+        this.baseManager = baseManager;
     }
 
 //    public CreateEntitiesController() {
@@ -102,7 +108,8 @@ public class CreateEntitiesController {
 
     @PostMapping("/map/{id}")
     public ResponseEntity<?> addMap(
-            @PathVariable long id, @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization, @RequestBody String imageB64) throws ResolutionTooSmallException, ImageNotSquareException, MapStringIsNotValidBase64Exception, UnprocessableMapImageException, ImageExtensionNotSupportedException, PrecedentEntityNotExistsException {
+            @PathVariable long id, @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization, @RequestBody String imageB64
+    ) throws ResolutionTooSmallException, ImageNotSquareException, MapStringIsNotValidBase64Exception, UnprocessableMapImageException, ImageExtensionNotSupportedException, PrecedentEntityNotExistsException {
         bucket = service.resolveBucket(getUsername());
         if (bucket.tryConsume(1)) {
             String newToken = tokenHandler.handle(authorization);
@@ -113,6 +120,19 @@ public class CreateEntitiesController {
                     .header("X-Rate-Limit-Remaining", String.valueOf(bucket.getAvailableTokens()))
                     .header("X-Api-Key", newToken)
                     .build();
+        }
+        return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
+    }
+
+
+    @PostMapping("/base")
+    public ResponseEntity<?> addBase(
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization, @RequestBody BaseDto base
+    ) throws CoordsOutOfBoundsException {
+        bucket = service.resolveBucket(getUsername());
+        if (bucket.tryConsume(1)) {
+            String newToken = tokenHandler.handle(authorization);
+            baseManager.save(base);
         }
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
     }
