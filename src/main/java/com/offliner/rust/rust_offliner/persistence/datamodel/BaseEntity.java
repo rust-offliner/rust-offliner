@@ -62,8 +62,7 @@ public class BaseEntity {
         isOnline = online;
     }
 
-    public BaseEntity(long id, int coordX, int coordY) {
-        this.id = id;
+    public BaseEntity(int coordX, int coordY) {
         this.coordX = coordX;
         this.coordY = coordY;
     }
