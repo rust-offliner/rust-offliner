@@ -15,14 +15,18 @@ import com.offliner.rust.rust_offliner.security.TokenHandler;
 import com.offliner.rust.rust_offliner.services.BucketAssignmentService;
 import com.offliner.rust.rust_offliner.services.EServerService;
 import io.github.bucket4j.Bucket;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/create")
@@ -126,20 +130,24 @@ public class CreateEntitiesController {
 
 
     @PostMapping("/base")
+    @SneakyThrows
     public ResponseEntity<?> addBase(
-            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization, @RequestBody BaseDto base
-    ) throws CoordsOutOfBoundsException {
+            @RequestHeader(HttpHeaders.AUTHORIZATION) String authorization, @Valid @RequestBody BaseDto base
+    ) {
         bucket = service.resolveBucket(getUsername());
         if (bucket.tryConsume(1)) {
             String newToken = tokenHandler.handle(authorization);
             baseManager.save(base);
+            return ResponseEntity.ok()
+                    .header("X-Rate-Limit-Remaining", String.valueOf(bucket.getAvailableTokens()))
+                    .header("X-Api-Key", newToken)
+                    .build();
         }
         return ResponseEntity.status(HttpStatus.TOO_MANY_REQUESTS).build();
     }
 
     private String getUsername() {
         User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        log.info(String.valueOf(user == null));
         return user.getUsername();
     }
 
