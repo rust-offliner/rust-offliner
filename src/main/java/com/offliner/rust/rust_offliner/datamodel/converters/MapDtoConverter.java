@@ -25,7 +25,7 @@ public class MapDtoConverter implements IBaseDTOConverter<BaseDto, BaseEntity> {
                 from.getX(),
                 from.getY()
         );
-        Optional<MapEntity> map = dao.findByServerAndCurrentIsTrue(from.getId());
+        Optional<MapEntity> map = dao.findByServerAndCurrentIsTrue(from.getServerId());
         map.ifPresent(base::setMap);
         base.setPlayerList(new ArrayList<>());
         return base;
